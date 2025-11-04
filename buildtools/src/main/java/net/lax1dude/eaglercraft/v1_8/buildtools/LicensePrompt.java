@@ -24,7 +24,7 @@ public class LicensePrompt {
 
 	public static void main(String[] args) {
 		System.out.println();
-		if (args.length > 0 && args[0].equalsIgnoreCase("--build")) {
+		if (args.length > 0 && args[1].equalsIgnoreCase("--build")) {
 			
 		} else {
 			display();

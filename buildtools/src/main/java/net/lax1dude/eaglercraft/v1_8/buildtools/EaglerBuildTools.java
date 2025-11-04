@@ -52,7 +52,7 @@ public class EaglerBuildTools {
 			}
 		}
 		
-		if(args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("help"))) {
+		if(args.length == 0 || (args[0].equalsIgnoreCase("help"))) {
 			System.out.println("Options:");
 			System.out.println("  help - displays this message");
 			System.out.println("  init - decompiles 1.8.8 and applies the main repo's patch files");
@@ -64,7 +64,7 @@ public class EaglerBuildTools {
 			System.out.println("  merge_direct - merges changes in the dev workspace with the repo's main patch files");
 			System.out.println("  clean - delete init and pullrequest directories, keeps dev workspace");
 			System.out.println();
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("init")) {
+		}else if(args.length > 0 && args[0].equalsIgnoreCase("init")) {
 			LicensePrompt.display();
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
@@ -77,7 +77,7 @@ public class EaglerBuildTools {
 				System.err.println("Task Failed!");
 				System.err.println();
 			}
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("workspace")) {
+		}else if(args.length > 0 && args[0].equalsIgnoreCase("workspace")) {
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
 			if(SetupWorkspace.setupWorkspace()) {
@@ -89,7 +89,7 @@ public class EaglerBuildTools {
 				System.err.println("Task Failed!");
 				System.err.println();
 			}
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("pullrequest")) {
+		}else if(args.length > 0 && args[0].equalsIgnoreCase("pullrequest")) {
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
 			if(PullRequestTask.pullRequest()) {
@@ -101,7 +101,7 @@ public class EaglerBuildTools {
 				System.err.println("Task Failed!");
 				System.err.println();
 			}
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("pullrequest_test")) {
+		}else if(args.length > 0 && args[0].equalsIgnoreCase("pullrequest_test")) {
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
 			if(SetupWorkspace.pullRequestTest()) {
@@ -113,7 +113,7 @@ public class EaglerBuildTools {
 				System.err.println("Task Failed!");
 				System.err.println();
 			}
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("unpatched")) {
+		}else if(args.length > 0 && args[0].equalsIgnoreCase("unpatched")) {
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
 			if(CreateUnpatched.createUnpatched()) {
@@ -125,7 +125,7 @@ public class EaglerBuildTools {
 				System.err.println("Task Failed!");
 				System.err.println();
 			}
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("merge")) {
+		}else if(args.length > 0 && args[0].equalsIgnoreCase("merge")) {
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
 			if(MergePullRequest.mergeTask()) {
@@ -137,7 +137,7 @@ public class EaglerBuildTools {
 				System.err.println("Task Failed!");
 				System.err.println();
 			}
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("merge_direct")) {
+		}else if(args.length > 0 && args[0].equalsIgnoreCase("merge_direct")) {
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
 			if(MergePullRequest.mergeDirect()) {
@@ -149,7 +149,7 @@ public class EaglerBuildTools {
 				System.err.println("Task Failed!");
 				System.err.println();
 			}
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("clean")) {
+		}else if(args.length > 0 && args[0].equalsIgnoreCase("clean")) {
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
 			if(TaskClean.taskClean()) {
