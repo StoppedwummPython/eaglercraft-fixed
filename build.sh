@@ -1,3 +1,4 @@
+#!bin/bash
 sh build_compile_buildtools.sh
 
 wget "http://www.modcoderpack.com/files/mcp918.zip" -O mcp918.zip
@@ -7,3 +8,20 @@ wget "https://launcher.mojang.com/v1/objects/0983f08be6a4e624f5d85689d1aca869ed9
 
 java -jar buildtools/BuildTools.jar init --build
 java -jar buildtools/BuildTools.jar workspace --build
+
+cd .eag
+
+chmod +x gradlew
+./gradlew makeMainWasmClientBundle
+./gradlew makeMainOfflineDownload
+
+mkdir ../out
+
+cp target_teavm_javascript/javascript ../out/eaglercraft_js_client/
+cp target_teavm_wasm_gc/javascript_dist ../out/eaglercraft_wasm_client/
+
+cd ..
+
+ls out
+
+echo "Build complete! Output is in the 'out' directory."
