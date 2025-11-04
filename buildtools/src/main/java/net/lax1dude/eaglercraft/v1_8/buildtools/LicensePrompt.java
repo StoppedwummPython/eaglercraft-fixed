@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 public class LicensePrompt {
 
 	public static void main(String[] args) {
-		System.out.println();
+		System.out.println(args.toString());
 		if (args.length > 1 && args[1].equalsIgnoreCase("--build")) {
 			
 		} else {
