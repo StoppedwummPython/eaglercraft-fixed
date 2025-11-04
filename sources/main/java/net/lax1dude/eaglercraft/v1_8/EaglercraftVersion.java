@@ -1,3 +1,4 @@
+// mark as something
 package net.lax1dude.eaglercraft.v1_8;
 
 import java.math.BigInteger;
@@ -9,31 +10,31 @@ public class EaglercraftVersion {
 	
 	/// Customize these to fit your fork:
 	
-	public static final String projectForkName = "EaglercraftX";
-	public static final String projectForkVersion = "u53";
-	public static final String projectForkVendor = "lax1dude";
+	public static final String projectForkName = "EaglercraftX-Fixed";
+	public static final String projectForkVersion = "fixed-u1";
+	public static final String projectForkVendor = "Stoppedwumm";
 	
-	public static final String projectForkURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8";
+	public static final String projectForkURL = "https://git.nerdvpn.de/Stoppedwumm/eaglercraft-fixed";
 	
 	//////////////////////////////////////////////////////////////////////
 	
 	public static final String projectOriginName = "EaglercraftX";
 	public static final String projectOriginAuthor = "lax1dude";
 	public static final String projectOriginRevision = "1.8";
-	public static final String projectOriginVersion = "u53";
+	public static final String projectOriginVersion = "fixed-u1";
 	
 	public static final String projectOriginURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8"; // rest in peace
 	
 	// EPK Version Identifier
 	
-	public static final String EPKVersionIdentifier = "u53"; // Set to null to disable EPK version check
+	public static final String EPKVersionIdentifier = "fixed-u1"; // Set to null to disable EPK version check
 	
 	// Updating configuration
 	
 	public static final boolean enableUpdateService = true;
 
 	public static final String updateBundlePackageName = "net.lax1dude.eaglercraft.v1_8.client";
-	public static final int updateBundlePackageVersionInt = 53;
+	public static final int updateBundlePackageVersionInt = 1;
 
 	public static final String updateLatestLocalStorageKey = "latestUpdate_" + updateBundlePackageName;
 
@@ -68,7 +69,7 @@ public class EaglercraftVersion {
 
 	public static final long demoWorldSeed = (long) "North Carolina".hashCode();
 
-	public static final boolean mainMenuEnableGithubButton = false;
+	public static final boolean mainMenuEnableGithubButton = true;
 
 	public static final boolean forceDemoMode = false;
 

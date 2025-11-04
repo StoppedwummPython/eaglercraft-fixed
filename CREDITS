@@ -33,6 +33,10 @@
   - Created the Gradle plugin
   - Proponent of Kotlin DSL
 
+  Stoppedwumm:
+  - Fixing Eaglercraft BuildTools.jar
+  - Uploading to github
+
 
 
  Code used within EaglercraftX
@@ -977,7 +981,3 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
- Make sure you also update the copy of this file in "sources/resources/assets/eagler/CREDITS.txt"
- 
- The content of both files should match, but not include this notice in the resources one
