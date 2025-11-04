@@ -19,8 +19,8 @@ chmod +x gradlew
 
 mkdir ../out
 
-cp target_teavm_javascript/javascript ../out/eaglercraft_js_client/
-cp target_teavm_wasm_gc/javascript_dist ../out/eaglercraft_wasm_client/
+cp -r target_teavm_javascript/javascript ../out/eaglercraft_js_client/
+cp -r target_teavm_wasm_gc/javascript_dist ../out/eaglercraft_wasm_client/
 
 cd ..
 
