@@ -23,7 +23,7 @@ SRC_JAVA_DIR="buildtools/src/main/java"
 SRC_RESOURCES_DIR="buildtools/src/main/resources"
 DEPS_DIR="buildtools/deps"
 RESOURCES_DIR="buildtools" # Top-level resources
-JAR_NAME="BuildTools.jar"
+JAR_NAME="buildtools/BuildTools.jar"
 MANIFEST_FILE="$RESOURCES_DIR/MANIFEST.MF"
 
 # Define paths to Java tools using JAVA_HOME
@@ -33,6 +33,7 @@ JAR="$JAVA_HOME/bin/jar"
 # --- Clean and Create Directories ---
 echo "Cleaning up previous builds..."
 rm -rf "$BUILD_DIR"
+rm -rf "$JAR_NAME"
 mkdir -p "$CLASSES_DIR"
 
 # --- Compile Java Sources ---
