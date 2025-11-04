@@ -64,12 +64,13 @@ public class InitTask {
 			if(locatedMinecraftJar == null && f.getName().endsWith(".jar")) {
 				locatedMinecraftJar = f;
 			}
-			if(f.getName().equalsIgnoreCase("1.8.json")) {
+			// Corrected Block: Start
+			// This now only looks for the specific, correct asset index files.
+			// It will no longer accidentally pick up assetsIndexTransformer.json.
+			if(f.getName().equalsIgnoreCase("1.8.json") || f.getName().equalsIgnoreCase("1.8.8.json")) {
 				locatedAssetsJson = f;
 			}
-			if(locatedAssetsJson == null && f.getName().endsWith(".json")) {
-				locatedAssetsJson = f;
-			}
+			// Corrected Block: End
 		}
 
 		if(locatedMCPZip == null) {

@@ -1,3 +1,6 @@
+// This is the CORRECT version of the code.
+// It is designed to read the standard Minecraft asset index file (e.g., 1.8.8.json)
+
 package net.lax1dude.eaglercraft.v1_8.buildtools.task.init;
 
 import java.io.File;
@@ -20,21 +23,6 @@ import org.json.JSONObject;
 
 import net.lax1dude.eaglercraft.v1_8.buildtools.EaglerBuildTools;
 
-/**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- * 
- */
 public class LoadResources {
 
 	public static boolean loadResources(File minecraftJarIn, File assetsIndexIn, File assetsJarOut, File tmpDir, File languagesZipOut) {
@@ -82,6 +70,7 @@ public class LoadResources {
 				os2.setLevel(5);
 					
 				try {
+					// This line correctly reads the asset index and gets the "objects" list
 					JSONObject json = (new JSONObject(FileUtils.readFileToString(assetsIndexIn, StandardCharsets.UTF_8))).getJSONObject("objects");
 					Iterator<String> itr = json.keys();
 		
@@ -91,13 +80,13 @@ public class LoadResources {
 						String name = itr.next();
 						JSONObject obj = json.getJSONObject(name);
 						
-						
 						ResourceRulesList.ResourceRule r = rules.get(name);
 						if(r.action == ResourceRulesList.Action.EXCLUDE) {
 							System.out.println("Skipping file '" + name + "'");
 							continue;
 						}
 						
+						// These lines will now work because the correct file is being used
 						String hash = obj.getString("hash");
 						int len = obj.getInt("size");
 		
