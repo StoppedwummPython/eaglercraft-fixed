@@ -31,6 +31,7 @@ public class EaglerBuildTools {
 	public static File repositoryRoot = new File(".");
 
 	public static void main(String[] args) {
+		Storage.args = args;
 		System.out.println("Eaglercraft 1.8 Build Tools");
 		System.out.println("Copyright (c) 2022-2025 lax1dude");
 		System.out.println();
@@ -68,7 +69,7 @@ public class EaglerBuildTools {
 			LicensePrompt.main(args);
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
-			if(InitTask.initTask()) {
+			if(InitTask.initTask(args)) {
 				System.out.println();
 				System.out.println("Task Complete.");
 				System.out.println();

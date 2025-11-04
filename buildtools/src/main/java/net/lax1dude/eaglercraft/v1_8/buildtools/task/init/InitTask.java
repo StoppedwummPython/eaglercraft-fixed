@@ -31,9 +31,9 @@ public class InitTask {
 	private static File locatedMinecraftJar = null;
 	private static File locatedAssetsJson = null;
 	
-	public static boolean initTask() {
+	public static boolean initTask(String[] args) {
 		try {
-			return initTask0();
+			return initTask0(args);
 		}catch(Throwable t) {
 			System.err.println();
 			System.err.println("Exception encountered while running task 'init'!");
@@ -42,7 +42,7 @@ public class InitTask {
 		}
 	}
 
-	private static boolean initTask0() throws Throwable {
+	private static boolean initTask0(String[] args) throws Throwable {
 		System.out.println("Scanning 'mcp918' folder...");
 		File mcp918dir = new File(EaglerBuildTools.repositoryRoot, "mcp918");
 		

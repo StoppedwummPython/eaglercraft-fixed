@@ -150,6 +150,9 @@ public class EaglerBuildToolsConfig {
 	}
 	
 	public static File askIfChangeIsWanted(File in) {
+		if (Storage.args.length > 1 && Storage.args[1].equalsIgnoreCase("--build")) {
+			return in;
+		}
 		System.out.println("Would you like to change this directory?");
 		System.out.println("Enter 'Y' for yes or 'N' for no: ");
 		String l = "N";
