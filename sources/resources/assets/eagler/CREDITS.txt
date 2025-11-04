@@ -33,6 +33,10 @@
   - Created the Gradle plugin
   - Proponent of Kotlin DSL
 
+  Stoppedwumm:
+  - Fixing Eaglercraft BuildTools.jar
+  - Uploading to github
+
 
 
  Code used within EaglercraftX

@@ -1,0 +1,20 @@
+{
+  "pycella18": {
+    "sounds": ["custom/pycella18"]
+  },
+  "pycella19": {
+    "sounds": ["custom/pycella19"]
+  },
+  "raelyn02": {
+    "sounds": ["custom/raelyn02"]
+  },
+  "raelyn03": {
+    "sounds": ["custom/raelyn03"]
+  },
+  "raelyn04": {
+    "sounds": ["custom/raelyn04"]
+  },
+  "raelyn05": {
+    "sounds": ["custom/raelyn05"]
+  }
+}

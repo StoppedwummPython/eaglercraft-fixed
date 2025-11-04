@@ -1,0 +1,13 @@
+--- assets/minecraft/texts/credits.txt
++++ assets/minecraft/texts/credits.txt
+@@ -49,6 +49,10 @@
+ §f			Ryan 'Scaevolus' Hitchman
+ §f			Elliot 'Hippoplatimus' Segal
+ 
++§7Eaglercraft X:
++§f		    lax1dude
++§f          ayunami2000
++
+ §7Developers of Mo' Creatures (horses etc):
+ §f			John Olarte (DrZhark)
+ §f			Kent Christian Jensen
