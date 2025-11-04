@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
@@ -23,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 public class LicensePrompt {
 
 	public static void main(String[] args) {
-		System.out.println(args.toString());
 		if (args.length > 1 && args[1].equalsIgnoreCase("--build")) {
 			
 		} else {

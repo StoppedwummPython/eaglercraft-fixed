@@ -65,7 +65,7 @@ public class EaglerBuildTools {
 			System.out.println("  clean - delete init and pullrequest directories, keeps dev workspace");
 			System.out.println();
 		}else if(args.length > 0 && args[0].equalsIgnoreCase("init")) {
-			LicensePrompt.display();
+			LicensePrompt.main(args);
 			System.out.println("Running task '" + args[0] + "':");
 			System.out.println();
 			if(InitTask.initTask()) {
