@@ -28,3 +28,8 @@ jobs:
         run: |
             chmod +x ./build.sh
             ./build.sh
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: eaglercraft-clients
+          path: out/
