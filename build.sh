@@ -9,9 +9,9 @@ wget "https://launcher.mojang.com/v1/objects/0983f08be6a4e624f5d85689d1aca869ed9
 java -jar buildtools/BuildTools.jar init --build
 java -jar buildtools/BuildTools.jar workspace --build
 
-ls .eag
+ls .eagworkspace
 
-cd .eag
+cd .eagworkspace
 
 chmod +x gradlew
 ./gradlew makeMainWasmClientBundle
