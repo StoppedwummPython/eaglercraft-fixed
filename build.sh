@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 sh build_compile_buildtools.sh
 
 wget "http://www.modcoderpack.com/files/mcp918.zip" -O mcp918.zip
