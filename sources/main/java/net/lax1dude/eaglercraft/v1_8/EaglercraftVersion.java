@@ -11,7 +11,7 @@ public class EaglercraftVersion {
 	/// Customize these to fit your fork:
 	
 	public static final String projectForkName = "EaglercraftX-Fixed";
-	public static final String projectForkVersion = "fixed-u1";
+	public static final String projectForkVersion = "fixed-u2";
 	public static final String projectForkVendor = "Stoppedwumm";
 	
 	public static final String projectForkURL = "https://git.nerdvpn.de/Stoppedwumm/eaglercraft-fixed";
@@ -21,13 +21,13 @@ public class EaglercraftVersion {
 	public static final String projectOriginName = "EaglercraftX";
 	public static final String projectOriginAuthor = "lax1dude";
 	public static final String projectOriginRevision = "1.8";
-	public static final String projectOriginVersion = "fixed-u1";
+	public static final String projectOriginVersion = "fixed-u2";
 	
 	public static final String projectOriginURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8"; // rest in peace
 	
 	// EPK Version Identifier
 	
-	public static final String EPKVersionIdentifier = "fixed-u1"; // Set to null to disable EPK version check
+	public static final String EPKVersionIdentifier = "fixed-u2"; // Set to null to disable EPK version check
 	
 	// Updating configuration
 	
