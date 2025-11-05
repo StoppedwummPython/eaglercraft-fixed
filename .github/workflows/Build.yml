@@ -4,6 +4,7 @@ on:
     branches:
       - main
 jobs:
+  # This job builds the client files and uploads them as an artifact
   build:
     runs-on: ubuntu-latest
     steps:
@@ -21,19 +22,23 @@ jobs:
           sudo rm /var/lib/man-db/auto-update
           sudo apt-get update
           sudo apt-get install -y ffmpeg
+      
       - name: Copy build config
         run: |
             cp workflowConfig.json buildtools_config.json
+            
       - name: Run Build Script
         run: |
             chmod +x ./build.sh
             ./build.sh
+            
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: eaglercraft-clients
           path: out/
 
+  # This job downloads the artifacts and deploys them to the external repository
   deploy:
     # This job runs only after the 'build' job has successfully completed
     needs: build
@@ -47,28 +52,56 @@ jobs:
           name: eaglercraft-clients
           path: out/
 
-      # ---- START OF CHANGES ----
-      - name: Install Git LFS
-        run: git lfs install
-      # ---- END OF CHANGES ----
+      - name: Deploy Manually using Git and LFS
+        run: |
+          # 1. Configure Git LFS
+          # This command initializes the Git LFS client in the runner environment.
+          git lfs install
 
-      - name: Deploy to external repository
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          # The secret token you created
-          personal_token: ${{ secrets.PAT }}
-          # The repository to push to
-          external_repository: StoppedwummPython/eageag
-          # The directory to publish
-          publish_dir: ./out
-          # The branch to push to in the destination repository
-          publish_branch: main
-          # ---- START OF CHANGES ----
-          # Enable LFS for the push
-          lfs: true
-          # ---- END OF CHANGES ----
-          # The commit user and email
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          # A custom commit message
-          commit_message: 'Automated deployment of static files'
+          # 2. Clone the destination repository using a Personal Access Token (PAT)
+          # We clone it into a new directory named 'deploy_repo'.
+          echo "Cloning destination repository..."
+          git clone "https://x-access-token:${{ secrets.PAT }}@github.com/StoppedwummPython/eageag.git" deploy_repo
+
+          # 3. Navigate into the cloned repository
+          cd deploy_repo
+
+          # 4. Clean the working directory
+          # This command removes all existing files and folders from the repository,
+          # ensuring we don't leave any old files behind.
+          echo "Cleaning out old files..."
+          # The `|| true` prevents the script from failing if there are no files to remove (e.g., on the first run).
+          git rm -rf . || true
+
+          # 5. Copy the new files from the build artifact
+          # We copy everything from the 'out' directory (now in the parent directory)
+          # into the current directory ('deploy_repo').
+          echo "Copying new website files..."
+          cp -r ../out/* .
+
+          # 6. Configure Git user for the commit
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 7. Add, commit, and push the changes
+          echo "Preparing to commit..."
+          
+          # Add all new files to the staging area. Git LFS will automatically handle
+          # any files that are configured for LFS tracking in the .gitattributes file.
+          git add .
+
+          # Check if there are any changes to commit to avoid empty commits.
+          if git diff --staged --quiet; then
+            echo "No changes detected. Nothing to commit."
+          else
+            echo "Committing changes..."
+            git commit -m "Automated deployment of static files | Source: ${{ github.sha }}"
+
+            echo "Pushing to remote..."
+            # The push command will upload LFS files to LFS storage and the pointers to the Git repository.
+            # The '-u' flag sets the upstream branch for future pushes.
+            git push -u origin main
+          fi
+        env:
+          # This makes the PAT available within the script for the git clone command.
+          PAT: ${{ secrets.PAT }}
