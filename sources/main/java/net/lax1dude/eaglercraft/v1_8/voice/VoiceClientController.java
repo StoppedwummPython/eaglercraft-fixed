@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude, ayunami2000, Stoppedwumm. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -141,20 +141,41 @@ public class VoiceClientController {
 		}
 	}
 
+	// ++-===== MODIFICATION START =====-++
+	
+	private static boolean voiceToggled = false;
+	private static boolean pttKeyWasDown = false;
+
 	public static void tickVoiceClient() {
 		if (voiceClient != null) {
 			voiceClient.tickVoiceClient();
 			Minecraft mc = Minecraft.getMinecraft();
 			if (voiceClient.getVoiceChannel() != EnumVoiceChannelType.NONE) {
-				activateVoice((mc.currentScreen == null || !mc.currentScreen.blockPTTKey())
-						&& Keyboard.isKeyDown(mc.gameSettings.voicePTTKey));
+				// Check if the PTT key is usable (e.g., not in a GUI)
+				boolean canUsePTT = (mc.currentScreen == null || !mc.currentScreen.blockPTTKey());
+				boolean pttKeyDown = canUsePTT && Keyboard.isKeyDown(mc.gameSettings.voicePTTKey);
+
+				// Check for a single key press (i.e., the key was not down before, but is now)
+				if (pttKeyDown && !pttKeyWasDown) {
+					voiceToggled = !voiceToggled; // Flip the toggle state
+				}
+				
+				pttKeyWasDown = pttKeyDown; // Remember the key's current state for the next tick
+
+				activateVoice(voiceToggled); // Activate voice based on the toggled state
 			} else {
+				// If the voice channel is disabled, force the toggle off and reset state
+				if(voiceToggled) {
+					voiceToggled = false;
+				}
 				activateVoice(false);
 			}
 			speakingSet.clear();
 			PlatformVoiceClient.tickVoiceClient();
 		}
 	}
+
+	// ++-====== MODIFICATION END ======-++
 
 	public static void setVoiceChannel(EnumVoiceChannelType channel) {
 		if (voiceClient != null) {
