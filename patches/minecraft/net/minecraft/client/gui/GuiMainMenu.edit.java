@@ -18,8 +18,9 @@
 
 + import java.util.Arrays;
 
-> CHANGE  2 : 30  @  2 : 4
+> CHANGE  2 : 31  @  2 : 4
 
+~ import java.util.List;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.EagUtils;
@@ -210,26 +211,32 @@
 + 		}
 + 
 
-> CHANGE  8 : 11  @  8 : 10
+> CHANGE  6 : 23  @  6 : 12
 
-~ 		this.buttonList.add(new GuiButton(4, this.width / 2 + 2, i + 72 + 12, 98, 20,
-~ 				I18n.format("menu.editProfile", new Object[0])));
+~ 		int j = i + 72 + 12;
 ~ 
-
-> CHANGE  1 : 6  @  1 : 2
-
+~ 		this.buttonList.add(new GuiButton(6, this.width / 2 - 100, j, "Information"));
+~ 
+~ 		j += 24;
+~ 
+~ 		this.buttonList
+~ 				.add(new GuiButton(0, this.width / 2 - 100, j, 98, 20, I18n.format("menu.options", new Object[0])));
+~ 		this.buttonList
+~ 				.add(new GuiButton(4, this.width / 2 + 2, j, 98, 20, I18n.format("menu.editProfile", new Object[0])));
+~ 
+~ 		this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j));
 ~ 
 ~ 		if (isFork) {
 ~ 			this.openGLWarning1 = EaglercraftVersion.mainMenuStringE;
 ~ 			this.openGLWarning2 = EaglercraftVersion.mainMenuStringF;
 ~ 			boolean line2 = this.openGLWarning2 != null && this.openGLWarning2.length() > 0;
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  2 : 7  @  2 : 7
 
+~ 			int k = Math.max(this.field_92023_s, this.field_92024_r);
+~ 			this.field_92022_t = (this.width - k) / 2;
 ~ 			this.field_92021_u = ((GuiButton) this.buttonList.get(0)).yPosition - (line2 ? 32 : 21);
-
-> CHANGE  1 : 2  @  1 : 2
-
+~ 			this.field_92020_v = this.field_92022_t + k;
 ~ 			this.field_92019_w = this.field_92021_u + (line2 ? 24 : 11);
 
 > CHANGE  10 : 23  @  10 : 12
@@ -265,12 +272,25 @@
 ~ 		if (parGuiButton.id == 4) {
 ~ 			this.mc.displayGuiScreen(new GuiScreenEditProfile(this));
 
-> CHANGE  2 : 4  @  2 : 4
+> CHANGE  2 : 10  @  2 : 4
 
-~ 		if (parGuiButton.id == 14) {
-~ 			EagRuntime.openLink(EaglercraftVersion.projectForkURL);
+~ 		if (parGuiButton.id == 6) {
+~ 			List<String> infoLines = new ArrayList<>();
+~ 			infoLines.add("This is a custom information screen.");
+~ 			infoLines.add("You can display any text you want here.");
+~ 			infoLines.add("");
+~ 			infoLines.add("EaglercraftX 1.8 is a project to");
+~ 			infoLines.add("decompile and patch Minecraft 1.8.8 for the web.");
+~ 			this.mc.displayGuiScreen(new GuiInfoScreen(this, "Information", infoLines));
 
-> CHANGE  3 : 4  @  3 : 4
+> INSERT  2 : 6  @  2
+
++ 		if (parGuiButton.id == 14) {
++ 			EagRuntime.openLink(EaglercraftVersion.projectForkURL);
++ 		}
++ 
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 			this.mc.displayGuiScreen(new GuiScreenDemoPlayWorldSelection(this));
 
