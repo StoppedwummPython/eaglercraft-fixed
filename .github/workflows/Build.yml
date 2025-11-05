@@ -21,16 +21,13 @@ jobs:
           sudo rm /var/lib/man-db/auto-update
           sudo apt-get update
           sudo apt-get install -y ffmpeg
-
       - name: Copy build config
         run: |
             cp workflowConfig.json buildtools_config.json
-
       - name: Run Build Script
         run: |
             chmod +x ./build.sh
             ./build.sh
-
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -50,6 +47,11 @@ jobs:
           name: eaglercraft-clients
           path: out/
 
+      # ---- START OF CHANGES ----
+      - name: Install Git LFS
+        run: git lfs install
+      # ---- END OF CHANGES ----
+
       - name: Deploy to external repository
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -61,6 +63,10 @@ jobs:
           publish_dir: ./out
           # The branch to push to in the destination repository
           publish_branch: main
+          # ---- START OF CHANGES ----
+          # Enable LFS for the push
+          lfs: true
+          # ---- END OF CHANGES ----
           # The commit user and email
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
