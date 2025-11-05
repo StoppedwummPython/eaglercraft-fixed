@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude, ayunami2000, Stoppedwumm. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
@@ -37,8 +36,6 @@ public class GuiVoiceOverlay extends Gui {
 	public final Minecraft mc;
 	public int width;
 	public int height;
-	
-	private long pttTimer = 0l;
 	
 	public GuiVoiceOverlay(Minecraft mc) {
 		this.mc = mc;
@@ -83,26 +80,15 @@ public class GuiVoiceOverlay extends Gui {
 			
 			mc.getTextureManager().bindTexture(voiceGuiIcons);
 			
-			if((mc.currentScreen == null || !mc.currentScreen.blockPTTKey()) && Keyboard.isKeyDown(mc.gameSettings.voicePTTKey)) {
-				long millis = EagRuntime.steadyTimeMillis();
-				if(pttTimer == 0l) {
-					pttTimer = millis;
-				}
+			if(VoiceClientController.isTalking()) {
+				// Draw the "ON" icon (red microphone)
 				GlStateManager.color(0.2f, 0.2f, 0.2f, 1.0f);
 				drawTexturedModalRect(0, 0, 0, 64, 32, 32);
 				GlStateManager.translate(-1.5f, -1.5f, 0.0f);
-				if(millis - pttTimer < 1050l) {
-					if((millis - pttTimer) % 300l < 150l) {
-						GlStateManager.color(0.9f, 0.2f, 0.2f, 1.0f);
-					}else {
-						GlStateManager.color(0.9f, 0.7f, 0.7f, 1.0f);
-					}
-				}else {
-					GlStateManager.color(0.9f, 0.3f, 0.3f, 1.0f);
-				}
+				GlStateManager.color(0.9f, 0.3f, 0.3f, 1.0f);
 				drawTexturedModalRect(0, 0, 0, 64, 32, 32);
-			}else {
-				pttTimer = 0l;
+			} else {
+				// Draw the "OFF" icon (white microphone)
 				GlStateManager.color(0.2f, 0.2f, 0.2f, 1.0f);
 				drawTexturedModalRect(0, 0, 0, 32, 32, 32);
 				GlStateManager.translate(-1.5f, -1.5f, 0.0f);
@@ -170,7 +156,6 @@ public class GuiVoiceOverlay extends Gui {
 					
 					for(int i = 0, l = listenerList.size(); i < l && i < 5; ++i) {
 						boolean speaking = speakers.contains(listenerList.get(i));
-						float speakf = speaking ? 1.0f : 0.75f;
 						
 						drawString(mc.fontRendererObj, listenerListStr.get(i), ww - left, hh - 13 - i * 11, speaking ? 0xEEEEEE : 0xBBBBBB);
 						
@@ -179,6 +164,7 @@ public class GuiVoiceOverlay extends Gui {
 						GlStateManager.pushMatrix();
 						GlStateManager.translate(ww - left - 14, hh - 14 - i * 11, 0.0f);
 						
+						float speakf = speaking ? 1.0f : 0.75f;
 						GlStateManager.scale(0.75f, 0.75f, 0.75f);
 						GlStateManager.color(speakf * 0.2f, speakf * 0.2f, speakf * 0.2f, 1.0f);
 						drawTexturedModalRect(0, 0, 64, speaking ? 176 : 208, 16, 16);

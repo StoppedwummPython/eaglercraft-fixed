@@ -9,7 +9,7 @@
  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * ARISING IN ANY WAY OUT of THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
@@ -140,8 +140,6 @@ public class VoiceClientController {
 			voiceClient.handleVoiceSignalPacketTypeDescription(user, desc);
 		}
 	}
-
-	// ++-===== MODIFICATION START =====-++
 	
 	private static boolean voiceToggled = false;
 	private static boolean pttKeyWasDown = false;
@@ -175,8 +173,6 @@ public class VoiceClientController {
 		}
 	}
 
-	// ++-====== MODIFICATION END ======-++
-
 	public static void setVoiceChannel(EnumVoiceChannelType channel) {
 		if (voiceClient != null) {
 			voiceClient.setVoiceChannel(channel);
@@ -206,6 +202,10 @@ public class VoiceClientController {
 			PlatformVoiceClient.activateVoice(talk);
 			talkStatus = talk;
 		}
+	}
+	
+	public static boolean isTalking() {
+		return talkStatus;
 	}
 
 	private static int proximity = 16;
