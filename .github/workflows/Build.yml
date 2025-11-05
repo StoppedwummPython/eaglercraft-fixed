@@ -67,30 +67,30 @@ jobs:
           cd deploy_repo
 
           # 4. Clean the working directory
-          # This command removes all existing files and folders from the repository,
-          # ensuring we don't leave any old files behind.
+          # This command removes all existing files and folders from the repository.
           echo "Cleaning out old files..."
-          # The `|| true` prevents the script from failing if there are no files to remove (e.g., on the first run).
           git rm -rf . || true
 
           # 5. Copy the new files from the build artifact
-          # We copy everything from the 'out' directory (now in the parent directory)
-          # into the current directory ('deploy_repo').
           echo "Copying new website files..."
           cp -r ../out/* .
 
-          # 6. Configure Git user for the commit
+          # 6. Create .nojekyll file to disable Jekyll processing
+          # This tells GitHub Pages to treat the repository as a pure static site.
+          echo "Creating .nojekyll file..."
+          touch .nojekyll
+
+          # 7. Configure Git user for the commit
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 7. Add, commit, and push the changes
+          # 8. Add, commit, and push the changes
           echo "Preparing to commit..."
           
-          # Add all new files to the staging area. Git LFS will automatically handle
-          # any files that are configured for LFS tracking in the .gitattributes file.
+          # Add all new files to the staging area, including the new .nojekyll file.
           git add .
 
-          # Check if there are any changes to commit to avoid empty commits.
+          # Check if there are any changes to commit.
           if git diff --staged --quiet; then
             echo "No changes detected. Nothing to commit."
           else
@@ -98,10 +98,9 @@ jobs:
             git commit -m "Automated deployment of static files | Source: ${{ github.sha }}"
 
             echo "Pushing to remote..."
-            # The push command will upload LFS files to LFS storage and the pointers to the Git repository.
-            # The '-u' flag sets the upstream branch for future pushes.
+            # The push command will upload LFS files and commit the changes.
             git push -u origin main
           fi
         env:
-          # This makes the PAT available within the script for the git clone command.
+          # This makes the PAT available within the script.
           PAT: ${{ secrets.PAT }}
