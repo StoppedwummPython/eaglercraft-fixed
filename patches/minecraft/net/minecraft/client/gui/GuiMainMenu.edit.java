@@ -60,7 +60,9 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  1  @  1 : 8
+> CHANGE  1 : 2  @  1 : 8
+
+~ import net.lax1dude.eaglercraft.v1_8.GuiInfoScreen;
 
 > DELETE  2  @  2 : 3
 

@@ -1252,35 +1252,4 @@ public class PlatformRuntime {
 		}
 	}
 
-	private static void runBootAnimation(WebGL2RenderingContext gl) {
-    long start = System.currentTimeMillis();
-    long duration = 3000; // 3 seconds
-
-    // Setup: clear background first
-    PlatformOpenGL._wglClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    PlatformOpenGL._wglClear(RealOpenGLEnums.GL_COLOR_BUFFER_BIT);
-
-    logger.info("[BootAnimation] Starting intro...");
-
-    // Simple color-based spinner for 3 seconds
-    while (System.currentTimeMillis() - start < duration) {
-        float t = (System.currentTimeMillis() - start) / (float) duration;
-        float angle = t * 720.0f; // two full rotations
-
-        // Compute RGB based on rotation (looks like a spinning gradient)
-        float r = (float) ((Math.sin(Math.toRadians(angle)) + 1.0) / 2.0);
-        float g = (float) ((Math.cos(Math.toRadians(angle * 1.5)) + 1.0) / 2.0);
-        float b = (float) ((Math.sin(Math.toRadians(angle * 0.5)) + 1.0) / 2.0);
-
-        PlatformOpenGL._wglClearColor(r, g, b, 1.0f);
-        PlatformOpenGL._wglClear(RealOpenGLEnums.GL_COLOR_BUFFER_BIT);
-
-        PlatformInput.update();
-        try { Thread.sleep(16); } catch (InterruptedException ignored) {}
-    }
-
-    logger.info("[BootAnimation] Done!");
-}
-
-
 }
