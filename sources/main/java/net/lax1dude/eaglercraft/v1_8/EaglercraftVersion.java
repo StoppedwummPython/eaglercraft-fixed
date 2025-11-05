@@ -56,7 +56,7 @@ public class EaglercraftVersion {
 	public static final String mainMenuStringB = projectOriginName + " " + projectOriginRevision + "-"
 			+ projectOriginVersion + " ultimate [" + EagRuntime.getPlatformType().getName() + "]";
 	public static final String mainMenuStringC = "";
-	public static final String mainMenuStringD = "Resources Copyright Mojang AB";
+	public static final String mainMenuStringD = "Resources Copyright Mojang AB and pb103938";
 
 	public static final String mainMenuStringE = projectForkName + " " + projectForkVersion;
 	public static final String mainMenuStringF = "Made by " + projectForkVendor;
@@ -67,7 +67,7 @@ public class EaglercraftVersion {
 	public static final String screenRecordingFilePrefix = projectOriginName + " "
 			+ projectOriginRevision + "-" + projectOriginVersion;
 
-	public static final long demoWorldSeed = (long) "North Carolina".hashCode();
+	public static final long demoWorldSeed = (long) "minecraft".hashCode();
 
 	public static final boolean mainMenuEnableGithubButton = true;
 
