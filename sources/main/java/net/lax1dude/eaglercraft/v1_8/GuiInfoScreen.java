@@ -1,4 +1,4 @@
-package net.minecraft.client.gui;
+package net.lax1dude.eaglercraft.v1_8;
 
 import java.io.IOException;
 import java.util.List;
