@@ -11,7 +11,17 @@
 			"installMaven": "false",
 			"installGradle": "true"
 		}
-	}
+	},
+
+	"customizations": {
+    "codespaces": {
+      "repositories": {
+        "StoppedwummPython/EaglerSPPythonRelay": {
+          "permissions": "write-all"
+        }
+      }
+    }
+  }
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
