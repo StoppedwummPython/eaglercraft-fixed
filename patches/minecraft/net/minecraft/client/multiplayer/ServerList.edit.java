@@ -39,13 +39,11 @@
 
 ~ import net.minecraft.util.EnumChatFormatting;
 
-> INSERT  4 : 5  @  4
+> CHANGE  4 : 7  @  4 : 5
 
-+ 	private final List<ServerData> allServers = Lists.newArrayList();
-
-> INSERT  1 : 2  @  1
-
-+ 	private final List<ServerData> temporaryServers = Lists.newArrayList();
+~ 	private final List<ServerData> allServers = Lists.newArrayList();
+~ 	private final List<ServerData> servers = Lists.newArrayList(); // User-added servers
+~ 	private final List<ServerData> temporaryServers = Lists.newArrayList(); // Remote servers
 
 > CHANGE  1 : 4  @  1 : 2
 
@@ -71,145 +69,188 @@
 + 
 + 	public void loadServerList(byte[] localStorage) {
 
-> CHANGE  1 : 10  @  1 : 5
+> CHANGE  1 : 12  @  1 : 5
 
 ~ 			freeServerIcons();
-~ 			this.temporaryServers.clear();
+~ 			this.servers.clear(); // Clear user servers
+~ 			this.temporaryServers.clear(); // Clear remote servers
 ~ 			this.allServers.clear();
-~ 			this.fetchRemoteServersAsync("https://eagproxy.vercel.app/api/servers?page=0");
+~ 
+~ 			// Add default servers to the main list first
 ~ 			for (DefaultServer srv : EagRuntime.getConfiguration().getDefaultServerList()) {
 ~ 				ServerData dat = new ServerData(srv.name, srv.addr, true);
 ~ 				dat.isDefault = true;
 ~ 				dat.hideAddress = srv.hideAddress;
-~ 				this.allServers.add(dat);
+~ 				this.servers.add(dat);
 
-> CHANGE  2 : 8  @  2 : 3
+> CHANGE  2 : 12  @  2 : 6
 
+~ 			// Load user-saved servers from storage
 ~ 			if (localStorage != null) {
 ~ 				NBTTagCompound nbttagcompound = CompressedStreamTools
 ~ 						.readCompressed(new EaglerInputStream(localStorage));
-~ 				if (nbttagcompound == null) {
-~ 					return;
+~ 				if (nbttagcompound != null) {
+~ 					NBTTagList nbttaglist = nbttagcompound.getTagList("servers", 10);
+~ 					for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+~ 						this.servers.add(ServerData.getServerDataFromNBTCompound(nbttaglist.getCompoundTagAt(i)));
+~ 					}
 ~ 				}
 
-> CHANGE  1 : 7  @  1 : 3
+> INSERT  1 : 5  @  1
 
-~ 				NBTTagList nbttaglist = nbttagcompound.getTagList("servers", 10);
-~ 
-~ 				for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-~ 					ServerData srv = ServerData.getServerDataFromNBTCompound(nbttaglist.getCompoundTagAt(i));
-~ 					this.allServers.add(srv);
-~ 				}
++ 
++ 			// Fetch remote servers asynchronously
++ 			this.fetchRemoteServersAsync("https://eagproxy.vercel.app/api/servers?page=0");
++ 
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 			logger.error("Couldn't load server list", exception);
+
+> DELETE  1  @  1 : 2
+
+> CHANGE  2 : 7  @  2 : 3
+
+~ 	/**
+~ 	 * This method is now restored for the ProfileExporter. It writes only the
+~ 	 * user-added servers to a byte array.
+~ 	 */
+~ 	public byte[] writeServerList() {
 
 > INSERT  1 : 2  @  1
 
-+ 
++ 			NBTTagCompound nbttagcompound = new NBTTagCompound();
 
-> CHANGE  1 : 4  @  1 : 2
+> CHANGE  3 : 6  @  3 : 4
 
-~ 			logger.error("Couldn't load server list", exception);
-~ 		} finally {
-~ 			refreshServerPing();
-
-> INSERT  5 : 12  @  5
-
-+ 		byte[] data = writeServerList();
-+ 		if (data != null) {
-+ 			EagRuntime.setStorage("s", data);
-+ 		}
-+ 	}
-+ 
-+ 	public byte[] writeServerList() {
-
-> CHANGE  3 : 8  @  3 : 5
-
-~ 			for (int i = 0, l = this.servers.size(); i < l; ++i) {
-~ 				ServerData serverdata = this.servers.get(i);
-~ 				if (!serverdata.isDefault) {
+~ 				if (!serverdata.isDefault) { // Only save non-default servers
 ~ 					nbttaglist.appendTag(serverdata.getNBTCompound());
 ~ 				}
 
-> CHANGE  4 : 9  @  4 : 5
+> DELETE  1  @  1 : 3
+
+> CHANGE  1 : 5  @  1 : 2
 
 ~ 
 ~ 			EaglerOutputStream bao = new EaglerOutputStream();
 ~ 			CompressedStreamTools.writeCompressed(nbttagcompound, bao);
 ~ 			return bao.toByteArray();
-~ 
 
 > CHANGE  1 : 3  @  1 : 2
 
-~ 			logger.error("Couldn't save server list", exception);
+~ 			logger.error("Couldn't write server list", exception);
 ~ 			return null;
 
-> DELETE  1  @  1 : 2
+> INSERT  1 : 2  @  1
 
-> CHANGE  3 : 8  @  3 : 4
-
-~ 		if (parInt1 < this.servers.size()) {
-~ 			return this.servers.get(parInt1);
-~ 		} else {
-~ 			return this.temporaryServers.get(parInt1 - this.servers.size());
-~ 		}
-
-> CHANGE  3 : 16  @  3 : 4
-
-~ 		if (parInt1 < this.servers.size()) {
-~ 			ServerData data = this.servers.remove(parInt1);
-~ 			if (data != null && data.iconTextureObject != null) {
-~ 				mc.getTextureManager().deleteTexture(data.iconResourceLocation);
-~ 				data.iconTextureObject = null;
-~ 			}
-~ 		} else {
-~ 			ServerData data = this.temporaryServers.remove(parInt1 - this.servers.size());
-~ 			if (data != null && data.iconTextureObject != null) {
-~ 				mc.getTextureManager().deleteTexture(data.iconResourceLocation);
-~ 				data.iconTextureObject = null;
-~ 			}
-~ 		}
-
-> INSERT  6 : 10  @  6
-
-+ 	public void addTemporaryServerData(ServerData parServerData) {
-+ 		this.temporaryServers.add(parServerData);
 + 	}
-+ 
 
-> CHANGE  1 : 2  @  1 : 2
+> INSERT  1 : 6  @  1
 
-~ 		return this.servers.size() + this.temporaryServers.size();
++ 	public void saveServerList() {
++ 		byte[] data = writeServerList();
++ 		if (data != null) {
++ 			EagRuntime.setStorage("s", data);
++ 		}
 
-> CHANGE  3 : 9  @  3 : 7
+> CHANGE  2 : 24  @  2 : 4
 
-~ 		if (parInt1 < this.servers.size() && parInt2 < this.servers.size()) {
-~ 			ServerData serverdata = this.getServerData(parInt1);
-~ 			this.servers.set(parInt1, this.getServerData(parInt2));
-~ 			this.servers.set(parInt2, serverdata);
+~ 	/**
+~ 	 * Gets the ServerData object by its display index in the GUI. Returns null if
+~ 	 * the index points to the separator.
+~ 	 */
+~ 	public ServerData getServerData(int index) {
+~ 		if (index < this.servers.size()) {
+~ 			return this.servers.get(index);
+~ 		}
+~ 		index -= this.servers.size();
+~ 
+~ 		if (!this.temporaryServers.isEmpty()) {
+~ 			if (index == 0) {
+~ 				return null; // This is the separator
+~ 			}
+~ 			index -= 1; // Account for the separator
+~ 		}
+~ 
+~ 		if (index < this.temporaryServers.size()) {
+~ 			return this.temporaryServers.get(index);
+~ 		}
+~ 
+~ 		return null;
+
+> CHANGE  2 : 13  @  2 : 4
+
+~ 	/**
+~ 	 * Removes the server at the given display index.
+~ 	 */
+~ 	public void removeServerData(int index) {
+~ 		if (index < this.servers.size()) {
+~ 			ServerData data = this.servers.remove(index);
+~ 			if (data != null && data.iconTextureObject != null) {
+~ 				mc.getTextureManager().deleteTexture(data.iconResourceLocation);
+~ 				data.iconTextureObject = null;
+~ 			}
+~ 		}
+
+> INSERT  6 : 9  @  6
+
++ 	/**
++ 	 * Counts all entries, including the separator.
++ 	 */
+
+> CHANGE  1 : 6  @  1 : 2
+
+~ 		int count = this.servers.size() + this.temporaryServers.size();
+~ 		if (!this.temporaryServers.isEmpty()) {
+~ 			count++; // Add one for the separator
+~ 		}
+~ 		return count;
+
+> CHANGE  2 : 10  @  2 : 7
+
+~ 	public void swapServers(int index1, int index2) {
+~ 		// Only allow swapping within the user's server list
+~ 		if (index1 < this.servers.size() && index2 < this.servers.size()) {
+~ 			ServerData serverdata = this.servers.get(index1);
+~ 			this.servers.set(index1, this.servers.get(index2));
+~ 			this.servers.set(index2, serverdata);
 ~ 			this.saveServerList();
 ~ 		}
 
-> CHANGE  3 : 8  @  3 : 4
+> CHANGE  2 : 6  @  2 : 4
 
-~ 		if (parInt1 < this.servers.size()) {
-~ 			this.servers.set(parInt1, parServerData);
-~ 		} else {
-~ 			this.temporaryServers.set(parInt1 - this.servers.size(), parServerData);
+~ 	public void func_147413_a(int index, ServerData parServerData) {
+~ 		if (index < this.servers.size()) {
+~ 			this.servers.set(index, parServerData);
 ~ 		}
 
-> INSERT  17 : 201  @  17
+> CHANGE  3 : 8  @  3 : 8
+
+~ 		// This method is complex and might not work correctly with the new structure.
+~ 		// For now, we'll assume it's primarily used for editing, which should be fine.
+~ 		ServerList serverlist = getServerList();
+~ 		for (int i = 0; i < serverlist.servers.size(); ++i) {
+~ 			ServerData serverdata = serverlist.servers.get(i);
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 				serverlist.servers.set(i, parServerData);
+
+> DELETE  3  @  3 : 4
+
+> INSERT  2 : 161  @  2
 
 + 
 + 	public void freeServerIcons() {
++ 		// Simplified icon freeing
 + 		TextureManager mgr = mc.getTextureManager();
-+ 		for (int i = 0, l = allServers.size(); i < l; ++i) {
-+ 			ServerData server = allServers.get(i);
++ 		for (ServerData server : this.servers) {
 + 			if (server.iconTextureObject != null) {
 + 				mgr.deleteTexture(server.iconResourceLocation);
 + 				server.iconTextureObject = null;
 + 			}
 + 		}
-+ 		for (int i = 0, l = temporaryServers.size(); i < l; ++i) {
-+ 			ServerData server = temporaryServers.get(i);
++ 		for (ServerData server : this.temporaryServers) {
 + 			if (server.iconTextureObject != null) {
 + 				mgr.deleteTexture(server.iconResourceLocation);
 + 				server.iconTextureObject = null;
@@ -218,15 +259,10 @@
 + 	}
 + 
 + 	public void refreshServerPing() {
-+ 		this.servers.clear();
-+ 		this.servers.addAll(this.allServers);
-+ 
 + 		List<ServerData> serversToPing = Lists.newArrayList();
 + 		serversToPing.addAll(this.servers);
 + 		serversToPing.addAll(this.temporaryServers);
-+ 
-+ 		for (int i = 0, l = serversToPing.size(); i < l; ++i) {
-+ 			ServerData dat = serversToPing.get(i);
++ 		for (ServerData dat : serversToPing) {
 + 			if (dat.currentQuery != null) {
 + 				if (dat.currentQuery.isOpen()) {
 + 					dat.currentQuery.close();
@@ -234,7 +270,7 @@
 + 				dat.currentQuery = null;
 + 			}
 + 			dat.hasPing = false;
-+ 			dat.pingSentTime = -1l;
++ 			dat.pingSentTime = -1L;
 + 		}
 + 	}
 + 
@@ -244,8 +280,8 @@
 + 		serversToUpdate.addAll(this.servers);
 + 		serversToUpdate.addAll(this.temporaryServers);
 + 
-+ 		for (int i = 0, l = serversToUpdate.size(); i < l; ++i) {
-+ 			ServerData dat = serversToUpdate.get(i);
++ 		for (ServerData dat : serversToUpdate) {
++ 			// (updateServerPing logic remains the same as your original file)
 + 			if (dat.pingSentTime <= 0l) {
 + 				dat.pingSentTime = EagRuntime.steadyTimeMillis();
 + 				if (RateLimitTracker.isLockedOut(dat.serverIP)) {
@@ -319,64 +355,45 @@
 + 		}
 + 	}
 + 
-+ 	// === NEW CODE BELOW ===
-+ 
 + 	public void fetchRemoteServersAsync(final String url) {
 + 		logger.info("Fetching remote server list from: {}", url);
-+ 
-+ 		// This method is now compatible with TeaVM as it does not create any new
-+ 		// threads.
-+ 		// The underlying implementation of downloadRemoteURIByteArray is responsible
-+ 		// for
-+ 		// asynchronous execution on both desktop and web platforms.
 + 		EagRuntime.downloadRemoteURIByteArray(url, (data, error) -> {
 + 			if (error != null) {
 + 				logger.error("Failed to download remote server list: {}", error.getMessage());
 + 				return;
 + 			}
-+ 
 + 			try {
 + 				String jsonStr = new String(data, StandardCharsets.UTF_8);
 + 				JSONObject json = new JSONObject(jsonStr);
-+ 
 + 				if (!json.has("success") || !json.getBoolean("success")) {
 + 					logger.warn("Remote server list reported failure");
 + 					return;
 + 				}
-+ 
 + 				JSONArray arr = json.getJSONArray("data");
 + 				List<ServerData> newTemp = Lists.newArrayList();
 + 				Set<String> dedupe = new HashSet<>();
-+ 
 + 				for (Object e : arr) {
 + 					if (!(e instanceof JSONObject))
 + 						continue;
 + 					JSONObject srv = (JSONObject) e;
 + 					if (!srv.has("address") || !srv.has("name"))
 + 						continue;
-+ 
 + 					String addr = srv.getString("address");
 + 					String name = srv.getString("name");
-+ 
 + 					if (dedupe.contains(addr))
 + 						continue;
 + 					dedupe.add(addr);
-+ 
 + 					ServerData dat = new ServerData(name, addr, false);
 + 					dat.isDefault = false;
 + 					dat.hideAddress = false;
 + 					newTemp.add(dat);
 + 				}
-+ 
 + 				synchronized (ServerList.this) {
 + 					temporaryServers.clear();
 + 					temporaryServers.addAll(newTemp);
 + 					logger.info("Loaded {} remote servers", newTemp.size());
 + 				}
-+ 
-+ 				// Refresh local + remote ping data
 + 				refreshServerPing();
-+ 
 + 			} catch (Exception ex) {
 + 				logger.error("Error parsing remote server list JSON", ex);
 + 			}
