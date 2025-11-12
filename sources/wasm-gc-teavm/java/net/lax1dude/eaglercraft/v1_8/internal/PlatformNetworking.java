@@ -28,10 +28,12 @@ public class PlatformNetworking {
 	private static final Logger logger = LogManager.getLogger("PlatformNetworking");
 
 	public static IWebSocketClient openWebSocket(String socketURI) {
+		logger.info("Opening WebSocket to \"{}\"...", socketURI);
 		IWebSocketClient client = openWebSocketImpl(socketURI);
 		if(client == null) {
 			logger.error("Could not open WebSocket to \"{}\"!", socketURI);
 		}
+		logger.info("WebSocket to \"{}\" opened successfully.", socketURI);
 		return client;
 	}
 

@@ -26,6 +26,7 @@ public class PlatformNetworking {
 	
 	public static IWebSocketClient openWebSocket(String socketURI) {
 		try {
+			logger.info("Opening WebSocket to \"{}\"...", socketURI);
 			return new TeaVMWebSocketClient(socketURI);
 		}catch(Throwable t) {
 			logger.error("Could not open WebSocket to \"{}\"!", socketURI);

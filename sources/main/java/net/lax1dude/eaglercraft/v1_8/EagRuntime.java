@@ -158,6 +158,7 @@ public class EagRuntime {
 	}
 
 	public static String getResourceString(String path) {
+		logger.info("Loading resource string from path: {}", path);
 		byte[] bytes = PlatformAssets.getResourceBytes(path);
 		return bytes != null ? new String(bytes, StandardCharsets.UTF_8) : null;
 	}
