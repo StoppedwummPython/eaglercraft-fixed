@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import net.lax1dude.eaglercraft.v1_8.internal.EaglerMissingResourceException;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformANGLE;
@@ -54,11 +55,11 @@ public class EagRuntime {
 	private static String userAgentString = null;
 	private static EnumPlatformOS operatingSystem = null;
 	private static EnumPlatformANGLE angleBackend = null;
-	
+
 	public static String getVersion() {
 		return "EagRuntimeX 1.0";
 	}
-	
+
 	public static void create() {
 		logger.info("Version: {}", getVersion());
 		PlatformRuntime.create();
@@ -133,7 +134,7 @@ public class EagRuntime {
 
 	public static byte[] getRequiredResourceBytes(String path) {
 		byte[] ret = PlatformAssets.getResourceBytes(path);
-		if(ret == null) {
+		if (ret == null) {
 			throw new EaglerMissingResourceException("Could not load required resource from EPK: " + path);
 		}
 		return ret;
@@ -141,16 +142,16 @@ public class EagRuntime {
 
 	public static InputStream getResourceStream(String path) {
 		byte[] b = PlatformAssets.getResourceBytes(path);
-		if(b != null) {
+		if (b != null) {
 			return new EaglerInputStream(b);
-		}else {
+		} else {
 			return null;
 		}
 	}
 
 	public static InputStream getRequiredResourceStream(String path) {
 		byte[] ret = PlatformAssets.getResourceBytes(path);
-		if(ret == null) {
+		if (ret == null) {
 			throw new EaglerMissingResourceException("Could not load required resource from EPK: " + path);
 		}
 		return new EaglerInputStream(ret);
@@ -163,7 +164,7 @@ public class EagRuntime {
 
 	public static String getRequiredResourceString(String path) {
 		byte[] ret = PlatformAssets.getResourceBytes(path);
-		if(ret == null) {
+		if (ret == null) {
 			throw new EaglerMissingResourceException("Could not load required resource from EPK: " + path);
 		}
 		return new String(ret, StandardCharsets.UTF_8);
@@ -171,27 +172,28 @@ public class EagRuntime {
 
 	public static List<String> getResourceLines(String path) {
 		byte[] bytes = PlatformAssets.getResourceBytes(path);
-		if(bytes != null) {
+		if (bytes != null) {
 			List<String> ret = new ArrayList<>();
 			try {
-				BufferedReader rd = new BufferedReader(new InputStreamReader(new EaglerInputStream(bytes), StandardCharsets.UTF_8));
+				BufferedReader rd = new BufferedReader(
+						new InputStreamReader(new EaglerInputStream(bytes), StandardCharsets.UTF_8));
 				String s;
-				while((s = rd.readLine()) != null) {
+				while ((s = rd.readLine()) != null) {
 					ret.add(s);
 				}
-			}catch(IOException ex) {
+			} catch (IOException ex) {
 				// ??
 				return null;
 			}
 			return ret;
-		}else {
+		} else {
 			return null;
 		}
 	}
 
 	public static List<String> getRequiredResourceLines(String path) {
 		List<String> ret = getResourceLines(path);
-		if(ret == null) {
+		if (ret == null) {
 			throw new EaglerMissingResourceException("Could not load required resource from EPK: " + path);
 		}
 		return ret;
@@ -200,7 +202,7 @@ public class EagRuntime {
 	public static void debugPrintStackTraceToSTDERR(Throwable t) {
 		debugPrintStackTraceToSTDERR0("", t);
 		Throwable c = t.getCause();
-		while(c != null) {
+		while (c != null) {
 			debugPrintStackTraceToSTDERR0("Caused by: ", c);
 			c = c.getCause();
 		}
@@ -208,61 +210,63 @@ public class EagRuntime {
 
 	private static void debugPrintStackTraceToSTDERR0(String pfx, Throwable t) {
 		System.err.println(pfx + t.toString());
-		if(!PlatformRuntime.printJSExceptionIfBrowser(t)) {
+		if (!PlatformRuntime.printJSExceptionIfBrowser(t)) {
 			getStackTrace(t, (s) -> {
 				System.err.println("    at " + s);
 			});
 		}
 	}
-	
+
 	public static void getStackTrace(Throwable t, Consumer<String> ret) {
-		if(t == null) return;
+		if (t == null)
+			return;
 		PlatformRuntime.getStackTrace(t, ret);
 	}
-	
+
 	public static String[] getStackTraceElements(Throwable t) {
-		if(t == null) return new String[0];
+		if (t == null)
+			return new String[0];
 		List<String> lst = new ArrayList<>();
 		PlatformRuntime.getStackTrace(t, (s) -> {
 			lst.add(s);
 		});
 		return lst.toArray(new String[lst.size()]);
 	}
-	
+
 	public static String getStackTrace(Throwable t) {
-		if(t == null) {
+		if (t == null) {
 			return "[null]";
 		}
 		StringBuilder sb = new StringBuilder();
 		getStackTrace0(t, sb);
 		Throwable c = t.getCause();
-		while(c != null) {
+		while (c != null) {
 			sb.append("\nCaused by: ");
 			getStackTrace0(c, sb);
 			c = c.getCause();
 		}
 		return sb.toString();
 	}
-	
+
 	private static void getStackTrace0(Throwable t, StringBuilder sb) {
 		sb.append(t.toString());
 		getStackTrace(t, (s) -> {
 			sb.append('\n').append("    at ").append(s);
 		});
 	}
-	
+
 	public static void debugPrintStackTrace(Throwable t) {
 		exceptionLogger.error(t);
 	}
-	
+
 	public static void dumpStack() {
 		try {
 			throw new Exception("Stack Trace");
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			exceptionLogger.error(ex);
 		}
 	}
-	
+
 	public static void exit() {
 		PlatformRuntime.exit();
 	}
@@ -380,4 +384,17 @@ public class EagRuntime {
 		return PlatformRuntime.immediateContinueSupported();
 	}
 
+	public static void downloadRemoteURIByteArray(String uri, BiConsumer<byte[], Throwable> callback) {
+	// This Consumer will be passed to the underlying platform runtime
+	Consumer<byte[]> platformConsumer = (data) -> {
+		if (data != null) {
+			// Success case: pass data and null error to the original caller
+			callback.accept(data, null);
+		} else {
+			// Failure case: pass null data and create a new error to notify the caller
+			callback.accept(null, new IOException("Failed to download remote URI: " + uri));
+		}
+	};
+	PlatformRuntime.downloadRemoteURIByteArray(uri, platformConsumer);
+}
 }

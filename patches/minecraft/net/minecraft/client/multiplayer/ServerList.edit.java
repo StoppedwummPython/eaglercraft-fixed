@@ -5,10 +5,17 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 4
+> CHANGE  2 : 4  @  2 : 4
 
-> INSERT  1 : 15  @  1
+~ import java.nio.charset.StandardCharsets;
+~ import java.util.HashSet;
 
+> INSERT  1 : 19  @  1
+
++ import java.util.Set;
++ 
++ import org.json.JSONArray;
++ import org.json.JSONObject;
 + 
 + import com.google.common.collect.Lists;
 + 
@@ -36,7 +43,11 @@
 
 + 	private final List<ServerData> allServers = Lists.newArrayList();
 
-> CHANGE  2 : 5  @  2 : 3
+> INSERT  1 : 2  @  1
+
++ 	private final List<ServerData> temporaryServers = Lists.newArrayList();
+
+> CHANGE  1 : 4  @  1 : 2
 
 ~ 	private static ServerList instance = null;
 ~ 
@@ -60,11 +71,12 @@
 + 
 + 	public void loadServerList(byte[] localStorage) {
 
-> CHANGE  1 : 9  @  1 : 5
+> CHANGE  1 : 10  @  1 : 5
 
 ~ 			freeServerIcons();
-~ 
+~ 			this.temporaryServers.clear();
 ~ 			this.allServers.clear();
+~ 			this.fetchRemoteServersAsync("https://eagproxy.vercel.app/api/servers?page=0");
 ~ 			for (DefaultServer srv : EagRuntime.getConfiguration().getDefaultServerList()) {
 ~ 				ServerData dat = new ServerData(srv.name, srv.addr, true);
 ~ 				dat.isDefault = true;
@@ -93,10 +105,11 @@
 
 + 
 
-> INSERT  2 : 4  @  2
+> CHANGE  1 : 4  @  1 : 2
 
-+ 		} finally {
-+ 			refreshServerPing();
+~ 			logger.error("Couldn't load server list", exception);
+~ 		} finally {
+~ 			refreshServerPing();
 
 > INSERT  5 : 12  @  5
 
@@ -124,19 +137,66 @@
 ~ 			return bao.toByteArray();
 ~ 
 
-> INSERT  2 : 3  @  2
+> CHANGE  1 : 3  @  1 : 2
 
-+ 			return null;
+~ 			logger.error("Couldn't save server list", exception);
+~ 			return null;
 
-> CHANGE  9 : 14  @  9 : 10
+> DELETE  1  @  1 : 2
 
-~ 		ServerData data = this.servers.remove(parInt1);
-~ 		if (data != null && data.iconTextureObject != null) {
-~ 			mc.getTextureManager().deleteTexture(data.iconResourceLocation);
-~ 			data.iconTextureObject = null;
+> CHANGE  3 : 8  @  3 : 4
+
+~ 		if (parInt1 < this.servers.size()) {
+~ 			return this.servers.get(parInt1);
+~ 		} else {
+~ 			return this.temporaryServers.get(parInt1 - this.servers.size());
 ~ 		}
 
-> INSERT  36 : 145  @  36
+> CHANGE  3 : 16  @  3 : 4
+
+~ 		if (parInt1 < this.servers.size()) {
+~ 			ServerData data = this.servers.remove(parInt1);
+~ 			if (data != null && data.iconTextureObject != null) {
+~ 				mc.getTextureManager().deleteTexture(data.iconResourceLocation);
+~ 				data.iconTextureObject = null;
+~ 			}
+~ 		} else {
+~ 			ServerData data = this.temporaryServers.remove(parInt1 - this.servers.size());
+~ 			if (data != null && data.iconTextureObject != null) {
+~ 				mc.getTextureManager().deleteTexture(data.iconResourceLocation);
+~ 				data.iconTextureObject = null;
+~ 			}
+~ 		}
+
+> INSERT  6 : 10  @  6
+
++ 	public void addTemporaryServerData(ServerData parServerData) {
++ 		this.temporaryServers.add(parServerData);
++ 	}
++ 
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 		return this.servers.size() + this.temporaryServers.size();
+
+> CHANGE  3 : 9  @  3 : 7
+
+~ 		if (parInt1 < this.servers.size() && parInt2 < this.servers.size()) {
+~ 			ServerData serverdata = this.getServerData(parInt1);
+~ 			this.servers.set(parInt1, this.getServerData(parInt2));
+~ 			this.servers.set(parInt2, serverdata);
+~ 			this.saveServerList();
+~ 		}
+
+> CHANGE  3 : 8  @  3 : 4
+
+~ 		if (parInt1 < this.servers.size()) {
+~ 			this.servers.set(parInt1, parServerData);
+~ 		} else {
+~ 			this.temporaryServers.set(parInt1 - this.servers.size(), parServerData);
+~ 		}
+
+> INSERT  17 : 201  @  17
 
 + 
 + 	public void freeServerIcons() {
@@ -148,13 +208,25 @@
 + 				server.iconTextureObject = null;
 + 			}
 + 		}
++ 		for (int i = 0, l = temporaryServers.size(); i < l; ++i) {
++ 			ServerData server = temporaryServers.get(i);
++ 			if (server.iconTextureObject != null) {
++ 				mgr.deleteTexture(server.iconResourceLocation);
++ 				server.iconTextureObject = null;
++ 			}
++ 		}
 + 	}
 + 
 + 	public void refreshServerPing() {
 + 		this.servers.clear();
 + 		this.servers.addAll(this.allServers);
-+ 		for (int i = 0, l = this.servers.size(); i < l; ++i) {
-+ 			ServerData dat = this.servers.get(i);
++ 
++ 		List<ServerData> serversToPing = Lists.newArrayList();
++ 		serversToPing.addAll(this.servers);
++ 		serversToPing.addAll(this.temporaryServers);
++ 
++ 		for (int i = 0, l = serversToPing.size(); i < l; ++i) {
++ 			ServerData dat = serversToPing.get(i);
 + 			if (dat.currentQuery != null) {
 + 				if (dat.currentQuery.isOpen()) {
 + 					dat.currentQuery.close();
@@ -168,14 +240,16 @@
 + 
 + 	public void updateServerPing() {
 + 		int total = 0;
-+ 		for (int i = 0, l = this.servers.size(); i < l; ++i) {
-+ 			ServerData dat = this.servers.get(i);
++ 		List<ServerData> serversToUpdate = Lists.newArrayList();
++ 		serversToUpdate.addAll(this.servers);
++ 		serversToUpdate.addAll(this.temporaryServers);
++ 
++ 		for (int i = 0, l = serversToUpdate.size(); i < l; ++i) {
++ 			ServerData dat = serversToUpdate.get(i);
 + 			if (dat.pingSentTime <= 0l) {
 + 				dat.pingSentTime = EagRuntime.steadyTimeMillis();
 + 				if (RateLimitTracker.isLockedOut(dat.serverIP)) {
-+ 					logger.error(
-+ 							"Server {} locked this client out on a previous connection, will not attempt to reconnect",
-+ 							dat.serverIP);
++ 					logger.error("Server {} locked this client out on a previous connection", dat.serverIP);
 + 					dat.serverMOTD = EnumChatFormatting.RED + "Too Many Requests!\nTry again later";
 + 					dat.pingToServer = -1l;
 + 					dat.hasPing = true;
@@ -232,8 +306,7 @@
 + 				if (!dat.currentQuery.isOpen() && dat.pingSentTime > 0l
 + 						&& (EagRuntime.steadyTimeMillis() - dat.pingSentTime) > 2000l && !dat.hasPing) {
 + 					if (RateLimitTracker.isProbablyLockedOut(dat.serverIP)) {
-+ 						logger.error("Server {} ratelimited this client out on a previous connection, assuming lockout",
-+ 								dat.serverIP);
++ 						logger.error("Server {} rate-limited this client previously", dat.serverIP);
 + 						dat.serverMOTD = EnumChatFormatting.RED + "Too Many Requests!\nTry again later";
 + 					}
 + 					dat.pingToServer = -1l;
@@ -244,8 +317,70 @@
 + 				break;
 + 			}
 + 		}
-+ 
 + 	}
 + 
++ 	// === NEW CODE BELOW ===
++ 
++ 	public void fetchRemoteServersAsync(final String url) {
++ 		logger.info("Fetching remote server list from: {}", url);
++ 
++ 		// This method is now compatible with TeaVM as it does not create any new
++ 		// threads.
++ 		// The underlying implementation of downloadRemoteURIByteArray is responsible
++ 		// for
++ 		// asynchronous execution on both desktop and web platforms.
++ 		EagRuntime.downloadRemoteURIByteArray(url, (data, error) -> {
++ 			if (error != null) {
++ 				logger.error("Failed to download remote server list: {}", error.getMessage());
++ 				return;
++ 			}
++ 
++ 			try {
++ 				String jsonStr = new String(data, StandardCharsets.UTF_8);
++ 				JSONObject json = new JSONObject(jsonStr);
++ 
++ 				if (!json.has("success") || !json.getBoolean("success")) {
++ 					logger.warn("Remote server list reported failure");
++ 					return;
++ 				}
++ 
++ 				JSONArray arr = json.getJSONArray("data");
++ 				List<ServerData> newTemp = Lists.newArrayList();
++ 				Set<String> dedupe = new HashSet<>();
++ 
++ 				for (Object e : arr) {
++ 					if (!(e instanceof JSONObject))
++ 						continue;
++ 					JSONObject srv = (JSONObject) e;
++ 					if (!srv.has("address") || !srv.has("name"))
++ 						continue;
++ 
++ 					String addr = srv.getString("address");
++ 					String name = srv.getString("name");
++ 
++ 					if (dedupe.contains(addr))
++ 						continue;
++ 					dedupe.add(addr);
++ 
++ 					ServerData dat = new ServerData(name, addr, false);
++ 					dat.isDefault = false;
++ 					dat.hideAddress = false;
++ 					newTemp.add(dat);
++ 				}
++ 
++ 				synchronized (ServerList.this) {
++ 					temporaryServers.clear();
++ 					temporaryServers.addAll(newTemp);
++ 					logger.info("Loaded {} remote servers", newTemp.size());
++ 				}
++ 
++ 				// Refresh local + remote ping data
++ 				refreshServerPing();
++ 
++ 			} catch (Exception ex) {
++ 				logger.error("Error parsing remote server list JSON", ex);
++ 			}
++ 		});
++ 	}
 
 > EOF

@@ -5,13 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 4  @  2
+> DELETE  2  @  2 : 4
 
-+ import java.io.IOException;
-+ 
+> CHANGE  2 : 20  @  2 : 13
 
-> CHANGE  2 : 17  @  2 : 15
-
+~ 
+~ import com.google.common.base.Splitter;
+~ import com.google.common.collect.Lists;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
@@ -35,7 +35,33 @@
 ~ import net.minecraft.util.EnumChatFormatting;
 ~ import net.minecraft.util.ResourceLocation;
 
-> DELETE  3  @  3 : 4
+> INSERT  1 : 24  @  1
+
++ /**
++  * + This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source
++  * code.
++  * 
++  * Minecraft 1.8.8 bytecode is (c) 2015 Mojang AB. "Do not distribute!" Mod
++  * Coder Pack v9.18 deobfuscation configs are (c) Copyright by the MCP Team
++  * 
++  * EaglercraftX 1.8 patch files (c) 2022-2025 lax1dude, ayunami2000. All Rights
++  * Reserved.
++  * 
++  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
++  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++  * POSSIBILITY OF SUCH DAMAGE.
++  * 
++  */
+
+> DELETE  2  @  2 : 3
 
 > INSERT  11 : 16  @  11
 
@@ -49,7 +75,7 @@
 
 > INSERT  1 : 2  @  1
 
-+ 	private static long lastRefreshCommit = 0l;
++ 	private int lastServerCount = -1; // Used to detect when the server list has changed
 
 > INSERT  1 : 7  @  1
 
@@ -67,11 +93,21 @@
 + 			lanServerList.forceRefresh();
 + 		}
 
-> CHANGE  7 : 8  @  7 : 8
+> INSERT  2 : 7  @  2
+
++ 	/**
++ 	 * + Adds the buttons (and other controls) to the screen in question. Called
++ 	 * when the GUI is displayed and when the window resizes, the buttonList is
++ 	 * cleared beforehand.
++ 	 */
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 			this.savedServerList = ServerList.getServerList();
 
-> DELETE  1  @  1 : 10
+> DELETE  1  @  1 : 2
+
+> DELETE  1  @  1 : 8
 
 > INSERT  3 : 7  @  3
 
@@ -80,7 +116,13 @@
 + 			}
 + 			lanServerList.forceRefresh();
 
-> INSERT  12 : 17  @  12
+> INSERT  7 : 10  @  7
+
++ 	/**
++ 	 * + Handles mouse input.
++ 	 */
+
+> INSERT  5 : 10  @  5
 
 + 	public void handleTouchInput() throws IOException {
 + 		super.handleTouchInput();
@@ -88,20 +130,44 @@
 + 	}
 + 
 
-> CHANGE  20 : 23  @  20 : 24
+> INSERT  18 : 21  @  18
+
++ 	/**
++ 	 * + Called from the main game loop to update the screen.
++ 	 */
+
+> CHANGE  2 : 9  @  2 : 6
+
+~ 
+~ 		// Check if the total number of servers (local + remote) has changed
+~ 		int currentServerCount = this.savedServerList.countServers();
+~ 		if (this.lastServerCount != currentServerCount) {
+~ 			this.lastServerCount = currentServerCount;
+~ 			// The list has been updated (e.g., by the async fetch), so rebuild the GUI list
+~ 			this.serverListSelector.func_148195_a(this.savedServerList);
+
+> CHANGE  2 : 7  @  2 : 3
 
 ~ 		this.savedServerList.updateServerPing();
 ~ 		if (lanServerList.update()) {
 ~ 			this.selectServer(-1);
-
-> CHANGE  1 : 2  @  1 : 3
-
+~ 		}
 ~ 		++ticksOpened;
 
-> DELETE  4  @  4 : 10
+> INSERT  2 : 5  @  2
 
-> CHANGE  2 : 3  @  2 : 3
++ 	/**
++ 	 * + Called when the screen is unloaded. Used to disable keyboard repeat events
++ 	 */
 
+> DELETE  2  @  2 : 8
+
+> CHANGE  2 : 7  @  2 : 3
+
+~ 	/**
+~ 	 * + Called by the controls from the buttonList when activated. (Mouse pressed
+~ 	 * for buttons)
+~ 	 */
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
 > CHANGE  19 : 21  @  19 : 22
@@ -117,25 +183,13 @@
 ~ 					this.mc.displayGuiScreen(new GuiScreenAddServer(this, this.selectedServer));
 ~ 				}
 
-> CHANGE  3 : 8  @  3 : 4
-
-~ 				long millis = EagRuntime.steadyTimeMillis();
-~ 				if (millis - lastRefreshCommit > 700l) {
-~ 					lastRefreshCommit = millis;
-~ 					this.refreshServerList();
-~ 				}
-
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 	public void refreshServerList() {
 
-> CHANGE  14 : 19  @  14 : 16
+> CHANGE  14 : 15  @  14 : 16
 
-~ 			long millis = EagRuntime.steadyTimeMillis();
-~ 			if (millis - lastRefreshCommit > 700l) {
-~ 				lastRefreshCommit = millis;
-~ 				this.refreshServerList();
-~ 			}
+~ 			this.refreshServerList();
 
 > INSERT  10 : 13  @  10
 
@@ -143,13 +197,9 @@
 + 					ServerCookieDataStore.clearCookie(this.selectedServer.serverIP);
 + 				}
 
-> CHANGE  5 : 10  @  5 : 7
+> CHANGE  5 : 6  @  5 : 7
 
-~ 			long millis = EagRuntime.steadyTimeMillis();
-~ 			if (millis - lastRefreshCommit > 700l) {
-~ 				lastRefreshCommit = millis;
-~ 				this.refreshServerList();
-~ 			}
+~ 			this.refreshServerList();
 
 > INSERT  6 : 9  @  6
 
@@ -157,13 +207,9 @@
 + 					ServerCookieDataStore.clearCookie(this.selectedServer.serverIP);
 + 				}
 
-> CHANGE  4 : 9  @  4 : 6
+> CHANGE  4 : 5  @  4 : 6
 
-~ 			long millis = EagRuntime.steadyTimeMillis();
-~ 			if (millis - lastRefreshCommit > 700l) {
-~ 				lastRefreshCommit = millis;
-~ 				this.refreshServerList();
-~ 			}
+~ 			this.refreshServerList();
 
 > INSERT  1 : 2  @  1
 
@@ -174,8 +220,13 @@
 + 	public void cancelDirectConnect() {
 + 		this.directConnect = false;
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  2 : 8  @  2 : 3
 
+~ 	/**
+~ 	 * + Fired when a key is typed (except F11 which toggles full screen). This is
+~ 	 * the equivalent of KeyListener.keyTyped(KeyEvent e). Args : character
+~ 	 * (character on the key), keyCode (lwjgl Keyboard key code)
+~ 	 */
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
 > DELETE  18  @  18 : 27
@@ -186,7 +237,14 @@
 
 > DELETE  2  @  2 : 11
 
-> INSERT  22 : 24  @  22
+> INSERT  15 : 19  @  15
+
++ 	/**
++ 	 * + Draws the screen and all the components in it. Args : mouseX, mouseY,
++ 	 * renderPartialTicks
++ 	 */
+
+> INSERT  7 : 9  @  7
 
 + 		relaysButton.drawScreen(i, j);
 + 		drawPluginDownloadLink(i, j);
@@ -260,8 +318,11 @@
 
 > DELETE  2  @  2 : 6
 
-> CHANGE  4 : 6  @  4 : 5
+> CHANGE  4 : 9  @  4 : 5
 
+~ 	/**
+~ 	 * + Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
+~ 	 */
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 ~ 		relaysButton.mouseClicked(parInt1, parInt2, parInt3);
 
@@ -275,7 +336,14 @@
 + 			EagRuntime.openLink("https://lax1dude.net/eaglerxserver");
 + 		}
 
-> INSERT  11 : 15  @  11
+> INSERT  2 : 6  @  2
+
++ 	/**
++ 	 * + Called when a mouse button is released. Args : mouseX, mouseY,
++ 	 * releaseButton
++ 	 */
+
+> INSERT  9 : 13  @  9
 
 + 	static LANServerList getLanServerList() {
 + 		return lanServerList;
