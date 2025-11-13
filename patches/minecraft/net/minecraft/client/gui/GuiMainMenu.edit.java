@@ -203,9 +203,11 @@
 
 > DELETE  10  @  10 : 11
 
-> INSERT  1 : 8  @  1
+> INSERT  1 : 10  @  1
 
-+ 
++ 		EaglercraftVersion.init();
++ 		logger.info("EaglercraftX Main Menu initialized. Version: {}-{}", EaglercraftVersion.projectForkVersion,
++ 				EaglercraftVersion.projectOriginVersion);
 + 		boolean isFork = !EaglercraftVersion.projectOriginAuthor.equalsIgnoreCase(EaglercraftVersion.projectForkVendor);
 + 
 + 		if (isFork && EaglercraftVersion.mainMenuStringF != null && EaglercraftVersion.mainMenuStringF.length() > 0) {

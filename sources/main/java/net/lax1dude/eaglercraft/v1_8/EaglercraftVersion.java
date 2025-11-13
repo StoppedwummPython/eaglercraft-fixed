@@ -16,7 +16,7 @@ public class EaglercraftVersion {
 	private static final String generalVersion = "fixed-u3";
 
 	public static final String projectForkName = "EaglercraftX-Fixed";
-	public static final String projectForkVersion = generalVersion;
+	public static String projectForkVersion = generalVersion;
 	public static final String projectForkVendor = "Stoppedwumm";
 
 	public static final String projectForkURL = "https://git.nerdvpn.de/Stoppedwumm/eaglercraft-fixed";
@@ -26,17 +26,17 @@ public class EaglercraftVersion {
 	public static final String projectOriginName = "EaglercraftX";
 	public static final String projectOriginAuthor = "lax1dude";
 	public static final String projectOriginRevision = "1.8";
-	public static final String projectOriginVersion = generalVersion;
+	public static String projectOriginVersion = generalVersion;
 
 	public static final String projectOriginURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8"; // rest in peace
 
 	// EPK Version Identifier
 
-	public static final String EPKVersionIdentifier = generalVersion; // Set to null to disable EPK version check
+	public static String EPKVersionIdentifier = null; // Set to null to disable EPK version check
 
 	// Updating configuration
 
-	public static final boolean enableUpdateService = true;
+	public static final boolean enableUpdateService = false;
 
 	public static final String updateBundlePackageName = "net.lax1dude.eaglercraft.v1_8.client";
 	public static final int updateBundlePackageVersionInt = 1;
@@ -57,18 +57,18 @@ public class EaglercraftVersion {
 	// Miscellaneous variables:
 
 	public static final String mainMenuStringA = "Minecraft 1.8.8";
-	public static final String mainMenuStringB = projectOriginName + " " + projectOriginRevision + "-"
+	public static String mainMenuStringB = projectOriginName + " " + projectOriginRevision + "-"
 			+ projectOriginVersion + " ultimate [" + EagRuntime.getPlatformType().getName() + "]";
 	public static final String mainMenuStringC = "";
 	public static final String mainMenuStringD = "Resources Copyright Mojang AB and pb103938";
 
-	public static final String mainMenuStringE = projectForkName + " " + projectForkVersion;
-	public static final String mainMenuStringF = "Made by " + projectForkVendor;
+	public static String mainMenuStringE = projectForkName + " " + projectForkVersion;
+	public static String mainMenuStringF = "Made by " + projectForkVendor;
 
 	public static final String mainMenuStringG = "Collector's Edition";
 	public static final String mainMenuStringH = "PBR Shaders";
 
-	public static final String screenRecordingFilePrefix = projectOriginName + " "
+	public static String screenRecordingFilePrefix = projectOriginName + " "
 			+ projectOriginRevision + "-" + projectOriginVersion;
 
 	public static final long demoWorldSeed = (long) "minecraft".hashCode();
@@ -78,5 +78,18 @@ public class EaglercraftVersion {
 	public static final boolean forceDemoMode = false;
 
 	public static final String localStorageNamespace = "_eaglercraftX";
+	public static void init() {
+		logger.info(projectForkName + " version " + projectForkVersion + " initialized.");
+		EaglercraftVersion.projectForkVersion = EagRuntime.getResourceString("EPKVersionIdentifier.txt");
+		EaglercraftVersion.projectOriginVersion = EaglercraftVersion.projectForkVersion;
+		EaglercraftVersion.screenRecordingFilePrefix = EaglercraftVersion.projectOriginName + " "
+				+ EaglercraftVersion.projectOriginRevision + "-" + EaglercraftVersion.projectOriginVersion;
+		EaglercraftVersion.mainMenuStringB = EaglercraftVersion.projectOriginName + " "
+				+ EaglercraftVersion.projectOriginRevision + "-" + EaglercraftVersion.projectOriginVersion
+				+ " ultimate [" + EagRuntime.getPlatformType().getName() + "]";
+		EaglercraftVersion.mainMenuStringE = EaglercraftVersion.projectForkName
+				+ " " + EaglercraftVersion.projectForkVersion;
+		logger.info("EPK VERSION IDENTIFIER {}", EagRuntime.getResourceString("EPKVersionIdentifier.txt"));
+	}
 
 }

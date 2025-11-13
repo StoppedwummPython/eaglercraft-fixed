@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.log4j.*;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
@@ -33,6 +34,7 @@ import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket00Handshake;
 import net.minecraft.client.Minecraft;
 
 public class RelayUpdateChecker {
+	private static final Logger logger = LogManager.getLogger("RelayUpdateChecker");
 
 	private static class RelayEntry {
 		
@@ -69,6 +71,7 @@ public class RelayUpdateChecker {
 			if(b != null) {
 				try {
 					lastUpdateCheck = (new DataInputStream(new EaglerInputStream(b))).readLong();
+					logger.info("Last relay update check: " + lastUpdateCheck + " (" + (System.currentTimeMillis() - lastUpdateCheck) + " ms ago)");
 				} catch (IOException e) {
 				}
 			}
