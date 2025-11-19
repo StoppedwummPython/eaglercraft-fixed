@@ -280,11 +280,11 @@
 
 ~ 		if (parGuiButton.id == 6) {
 ~ 			List<String> infoLines = new ArrayList<>();
-~ 			infoLines.add("This is a custom information screen.");
-~ 			infoLines.add("You can display any text you want here.");
+~ 			infoLines.add("Changelog");
+~ 			infoLines.add("Added Servers from servers.eaglercraft.com");
+~ 			infoLines.add("servers.eaglercraft.com");
 ~ 			infoLines.add("");
-~ 			infoLines.add("EaglercraftX 1.8 is a project to");
-~ 			infoLines.add("decompile and patch Minecraft 1.8.8 for the web.");
+~ 			infoLines.add("Added 'Toggle to speak' to Voicechat");
 ~ 			this.mc.displayGuiScreen(new GuiInfoScreen(this, "Information", infoLines));
 
 > INSERT  2 : 6  @  2
