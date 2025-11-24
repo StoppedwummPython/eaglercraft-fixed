@@ -60,6 +60,10 @@ jobs:
           chmod +x butler
           # just a sanity check run (and also helpful in case you're sharing CI logs)
           ./butler -V
+          echo $PAT # just a test
+        env: 
+          # This makes the PAT available within the script.
+          PAT: ${{ secrets.PAT }}
 
       - name: Deploy Manually using Git and LFS
         run: |
