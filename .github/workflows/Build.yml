@@ -82,7 +82,7 @@ jobs:
           # 4. Clean the working directory
           # This command removes all existing files and folders from the repository.
           echo "Cleaning out old files..."
-          git rm -rf . || true
+          git rm -rf eaglercraft_js_client eaglercraft_wasm_client || true
 
           # 5. Copy the new files from the build artifact
           echo "Copying new website files..."
