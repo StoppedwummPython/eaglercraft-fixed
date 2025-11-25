@@ -6,7 +6,7 @@ To run build_init, place the following files in this directory:
 
  - 'mcp918.zip' (mod coder pack for minecraft 1.8.8)
  - '1.8.8.jar` (jar file for minecraft 1.8.8)
- - '1.8.json' (assets index for minecraft 1.8)
+ - '1.8.json' or '1.8.8.json' (assets index for minecraft 1.8)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
