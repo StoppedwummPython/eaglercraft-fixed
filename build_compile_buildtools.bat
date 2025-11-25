@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 
 REM Exit immediately if a command exits with a non-zero status.
 set "errorlevel="
@@ -52,8 +52,19 @@ for %%j in ("%DEPS_DIR%\*.jar") do (
     )
 )
 
+if "!CP!"=="" (
+    echo Error: No dependencies found in %DEPS_DIR%.
+    del sources.txt
+    exit /b 1
+)
+
 REM Run the compiler
-"%JAVAC%" -d "%CLASSES_DIR%" -cp "%CP%" @sources.txt
+"%JAVAC%" -d "%CLASSES_DIR%" -cp "!CP!" @sources.txt
+if %ERRORLEVEL% NEQ 0 (
+    echo Compilation failed!
+    del sources.txt
+    exit /b 1
+)
 
 REM --- Copy Resources ---
 echo Copying resources...
@@ -66,7 +77,7 @@ if exist "%SRC_RESOURCES_DIR%" (
 REM --- Unpack Dependencies ---
 echo Unpacking dependencies into build directory...
 for %%j in ("%DEPS_DIR%\*.jar") do (
-    echo  > Unpacking %%~nxj
+    echo Unpacking %%~nxj
     pushd "%CLASSES_DIR%"
     "%JAR%" -xf "%PROJECT_ROOT%\%%~j"
     popd
@@ -80,7 +91,8 @@ REM Create the initial JAR file.
 
 echo Adding other top-level files to the JAR...
 pushd "%RESOURCES_DIR%"
-"%JAR%" uf ../"%JAR_NAME%" BuildTools.jar TeaVMBridge.jar Java11Check.jar Java17Check.jar production-favicon.png production-index-ext.html production-index.html MAINFEST-README-PLEASE.txt
+REM Removed BuildTools.jar from the list below to prevent adding the target jar into itself
+"%JAR%" uf ../"%JAR_NAME%" TeaVMBridge.jar Java11Check.jar Java17Check.jar production-favicon.png production-index-ext.html production-index.html MAINFEST-README-PLEASE.txt
 popd
 
 REM --- Cleanup ---
