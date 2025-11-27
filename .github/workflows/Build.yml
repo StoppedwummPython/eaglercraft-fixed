@@ -1,11 +1,13 @@
 name: Build and Deploy to Static Repo
 on:
+  # Trigger only on pushes to these specific branches.
+  # Do NOT add 'pull_request' here.
   push:
     branches:
       - main
-      - stoppeds-fun-stuff # Added the new branch here
+      - stoppeds-fun-stuff
+
 jobs:
-  # This job builds the client files and uploads them as an artifact
   build:
     runs-on: ubuntu-latest
     steps:
@@ -38,10 +40,10 @@ jobs:
           name: eaglercraft-clients
           path: out/
 
-  # This job downloads the artifacts and deploys them to the external repository
   deploy:
     needs: build
-    # Updated logic to run on either branch
+    # STICT CHECK: Only run if it is a PUSH event AND (is main OR is stoppeds-fun-stuff)
+    # This prevents PRs from ever running this job.
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/stoppeds-fun-stuff')
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +52,7 @@ jobs:
         with:
           name: eaglercraft-clients
           path: out/
-          
+
       - name: Install Butler
         run: |
           curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
@@ -82,37 +84,37 @@ jobs:
           if [ "$CURRENT_BRANCH" == "main" ]; then
             echo "--- DEPLOYING MAIN TO ROOT ---"
             
-            # Clean root directory except .git folder
-            # Using find/rm is safer than git rm for bulk wiping while keeping .git
-            find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
+            # PRESERVE snapshit and PRESERVE index.html (unless overwritten)
+            echo "Cleaning specific client folders only..."
+            rm -rf eaglercraft_js_client eaglercraft_wasm_client
             
-            # Copy new files to root
+            echo "Copying new files to root..."
             cp -r ../out/* .
             
-            # Create .nojekyll
             touch .nojekyll
             
           elif [ "$CURRENT_BRANCH" == "stoppeds-fun-stuff" ]; then
             echo "--- DEPLOYING TO SNAPSHIT DIRECTORY ---"
             
-            # Create directory if it doesn't exist
+            # Ensure directory exists
             mkdir -p snapshit
             
-            # Clean only the snapshit directory
+            # Clean INSIDE snapshit only
             rm -rf snapshit/*
             
             # Copy new files into the subdirectory
+            echo "Copying files to snapshit/..."
             cp -r ../out/* snapshit/
             
           else
-            echo "Unknown branch $CURRENT_BRANCH. Skipping deployment."
+            # Safety catch: If we somehow got here on a different branch, fail.
+            echo "Error: Branch $CURRENT_BRANCH is not authorized for deployment."
             exit 1
           fi
 
           # 6. Add, commit, and push
           echo "Preparing to commit..."
           
-          # 'git add .' handles both new files and deletions automatically
           git add .
 
           if git diff --staged --quiet; then
