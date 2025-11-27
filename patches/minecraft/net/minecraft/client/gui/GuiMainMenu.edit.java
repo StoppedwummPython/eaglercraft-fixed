@@ -215,18 +215,16 @@
 + 		}
 + 
 
-> CHANGE  6 : 23  @  6 : 12
+> CHANGE  6 : 21  @  6 : 12
 
 ~ 		int j = i + 72 + 12;
 ~ 
-~ 		this.buttonList.add(new GuiButton(6, this.width / 2 - 100, j, "Information"));
+~ 		this.buttonList.add(new GuiButton(6, this.width / 2 - 100, j, "Browse Add-Ons!"));
 ~ 
 ~ 		j += 24;
 ~ 
-~ 		this.buttonList
-~ 				.add(new GuiButton(0, this.width / 2 - 100, j, 98, 20, I18n.format("menu.options", new Object[0])));
-~ 		this.buttonList
-~ 				.add(new GuiButton(4, this.width / 2 + 2, j, 98, 20, I18n.format("menu.editProfile", new Object[0])));
+~ 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j, 98, 20, "Browse Add-Ons!"));
+~ 		this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j, 98, 20, "Browse Add-Ons!"));
 ~ 
 ~ 		this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j));
 ~ 
@@ -243,11 +241,12 @@
 ~ 			this.field_92020_v = this.field_92022_t + k;
 ~ 			this.field_92019_w = this.field_92021_u + (line2 ? 24 : 11);
 
-> CHANGE  10 : 23  @  10 : 12
+> CHANGE  6 : 20  @  6 : 12
 
+~ 		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, parInt1, "Browse Add-Ons!"));
+~ 		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, parInt1 + parInt2 * 1, "Browse Add-Ons!"));
 ~ 		if (EaglercraftVersion.mainMenuEnableGithubButton) {
-~ 			this.buttonList.add(
-~ 					new GuiButton(14, this.width / 2 - 100, parInt1 + parInt2 * 2, I18n.format("menu.forkOnGitlab")));
+~ 			this.buttonList.add(new GuiButton(14, this.width / 2 - 100, parInt1 + parInt2 * 2, "Browse Add-Ons!"));
 ~ 		} else {
 ~ 			if (EagRuntime.getConfiguration().isEnableDownloadOfflineButton()
 ~ 					&& (EagRuntime.getConfiguration().getDownloadOfflineButtonLink() != null
@@ -263,58 +262,56 @@
 
 ~ 		this.buttonResetDemo.enabled = this.mc.gameSettings.hasCreatedDemoWorld;
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  2 : 3  @  2 : 11
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  1 : 3  @  1 : 2
 
 ~ 			this.mc.displayGuiScreen(new GuiScreenIntegratedServerStartup(this));
+~ 			return;
 
-> CHANGE  6 : 8  @  6 : 8
+> CHANGE  1 : 40  @  1 : 27
 
-~ 		if (parGuiButton.id == 4) {
-~ 			this.mc.displayGuiScreen(new GuiScreenEditProfile(this));
-
-> CHANGE  2 : 10  @  2 : 4
-
-~ 		if (parGuiButton.id == 6) {
-~ 			List<String> infoLines = new ArrayList<>();
-~ 			infoLines.add("Changelog");
-~ 			infoLines.add("Added Servers from servers.eaglercraft.com");
-~ 			infoLines.add("servers.eaglercraft.com");
-~ 			infoLines.add("");
-~ 			infoLines.add("Added 'Toggle to speak' to Voicechat");
-~ 			this.mc.displayGuiScreen(new GuiInfoScreen(this, "Information", infoLines));
-
-> INSERT  2 : 6  @  2
-
-+ 		if (parGuiButton.id == 14) {
-+ 			EagRuntime.openLink(EaglercraftVersion.projectForkURL);
-+ 		}
-+ 
-
-> CHANGE  1 : 2  @  1 : 2
-
-~ 			this.mc.displayGuiScreen(new GuiScreenDemoPlayWorldSelection(this));
-
-> CHANGE  3 : 5  @  3 : 9
-
-~ 			GuiYesNo guiyesno = GuiSelectWorld.func_152129_a(this, "Demo World", 12);
-~ 			this.mc.displayGuiScreen(guiyesno);
-
-> INSERT  2 : 12  @  2
-
-+ 		if (parGuiButton.id == 15) {
-+ 			if (EagRuntime.getConfiguration().isEnableDownloadOfflineButton()) {
-+ 				String link = EagRuntime.getConfiguration().getDownloadOfflineButtonLink();
-+ 				if (link != null) {
-+ 					EagRuntime.openLink(link);
-+ 				} else {
-+ 					UpdateService.quine();
-+ 				}
-+ 			}
-+ 		}
+~ 		List<String> infoLines = new ArrayList<>();
+~ 		infoLines.add("Marketplace");
+~ 		infoLines.add("");
+~ 		infoLines.add("BROWSE EXPENSIVE SHIT");
+~ 		this.mc.displayGuiScreen(new GuiInfoScreen(this, "Marketplace", infoLines));
+~ 		return;
+~ 		/**
+~ 		 * if (parGuiButton.id == 0) { this.mc.displayGuiScreen(new GuiOptions(this,
+~ 		 * this.mc.gameSettings)); }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 5) { this.mc.displayGuiScreen(new GuiLanguage(this,
+~ 		 * this.mc.gameSettings, this.mc.getLanguageManager())); }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 1) { this.mc.displayGuiScreen(new
+~ 		 * GuiScreenIntegratedServerStartup(this)); }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 2) { this.mc.displayGuiScreen(new
+~ 		 * GuiMultiplayer(this)); }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 4) { this.mc.displayGuiScreen(new
+~ 		 * GuiScreenEditProfile(this)); }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 6) { return; }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 14) {
+~ 		 * EagRuntime.openLink(EaglercraftVersion.projectForkURL); }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 11) { this.mc.displayGuiScreen(new
+~ 		 * GuiScreenDemoPlayWorldSelection(this)); }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 12) { GuiYesNo guiyesno =
+~ 		 * GuiSelectWorld.func_152129_a(this, "Demo World", 12);
+~ 		 * this.mc.displayGuiScreen(guiyesno); }
+~ 		 * 
+~ 		 * if (parGuiButton.id == 15) { if
+~ 		 * (EagRuntime.getConfiguration().isEnableDownloadOfflineButton()) { String link
+~ 		 * = EagRuntime.getConfiguration().getDownloadOfflineButtonLink(); if (link !=
+~ 		 * null) { EagRuntime.openLink(link); } else { UpdateService.quine(); } } }
+~ 		 */
 
 > DELETE  2  @  2 : 7
 

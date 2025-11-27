@@ -61,40 +61,39 @@
 
 > CHANGE  2 : 6  @  2 : 4
 
-~ 		this.buttonList.add(new GuiButtonWithStupidIcons(1, this.width / 2 - 100, this.height / 4 + 120 + b0,
-~ 				I18n.format("menu.returnToMenu", new Object[0]), PauseMenuCustomizeState.icon_disconnect_L,
-~ 				PauseMenuCustomizeState.icon_disconnect_L_aspect, PauseMenuCustomizeState.icon_disconnect_R,
-~ 				PauseMenuCustomizeState.icon_disconnect_R_aspect));
+~ 		this.buttonList.add(
+~ 				new GuiButtonWithStupidIcons(1, this.width / 2 - 100, this.height / 4 + 120 + b0, "Browse Add-ons!",
+~ 						PauseMenuCustomizeState.icon_disconnect_L, PauseMenuCustomizeState.icon_disconnect_L_aspect,
+~ 						PauseMenuCustomizeState.icon_disconnect_R, PauseMenuCustomizeState.icon_disconnect_R_aspect));
 
-> INSERT  2 : 6  @  2
+> CHANGE  1 : 6  @  1 : 2
 
-+ 			if (this.mc.thePlayer != null && this.mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver >= 4) {
-+ 				this.buttonList.add(notifBellButton = new GuiButtonNotifBell(11, width - 22, height - 22));
-+ 				notifBellButton.setUnread(mc.thePlayer.sendQueue.getNotifManager().getUnread());
-+ 			}
+~ 			((GuiButton) this.buttonList.get(0)).displayString = "Browse Add-ons!";
+~ 			if (this.mc.thePlayer != null && this.mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver >= 4) {
+~ 				this.buttonList.add(notifBellButton = new GuiButtonNotifBell(11, width - 22, height - 22));
+~ 				notifBellButton.setUnread(mc.thePlayer.sendQueue.getNotifManager().getUnread());
+~ 			}
 
-> CHANGE  2 : 40  @  2 : 14
+> CHANGE  2 : 38  @  2 : 14
 
-~ 		this.buttonList.add(new GuiButtonWithStupidIcons(4, this.width / 2 - 100, this.height / 4 + 24 + b0,
-~ 				I18n.format("menu.returnToGame", new Object[0]), PauseMenuCustomizeState.icon_backToGame_L,
-~ 				PauseMenuCustomizeState.icon_backToGame_L_aspect, PauseMenuCustomizeState.icon_backToGame_R,
-~ 				PauseMenuCustomizeState.icon_backToGame_R_aspect));
+~ 		this.buttonList
+~ 				.add(new GuiButtonWithStupidIcons(4, this.width / 2 - 100, this.height / 4 + 24 + b0, "Browse Add-ons!",
+~ 						PauseMenuCustomizeState.icon_backToGame_L, PauseMenuCustomizeState.icon_backToGame_L_aspect,
+~ 						PauseMenuCustomizeState.icon_backToGame_R, PauseMenuCustomizeState.icon_backToGame_R_aspect));
 ~ 		this.buttonList.add(new GuiButtonWithStupidIcons(0, this.width / 2 - 100, this.height / 4 + 96 + b0, 98, 20,
-~ 				I18n.format("menu.options", new Object[0]), PauseMenuCustomizeState.icon_options_L,
+~ 				"Browse Add-ons!", PauseMenuCustomizeState.icon_options_L,
 ~ 				PauseMenuCustomizeState.icon_options_L_aspect, PauseMenuCustomizeState.icon_options_R,
 ~ 				PauseMenuCustomizeState.icon_options_R_aspect));
-~ 		this.buttonList
-~ 				.add(lanButton = new GuiButtonWithStupidIcons(7, this.width / 2 + 2, this.height / 4 + 96 + b0, 98, 20,
-~ 						I18n.format(LANServerController.isLANOpen() ? "menu.closeLan" : "menu.openToLan",
-~ 								new Object[0]),
-~ 						PauseMenuCustomizeState.icon_discord_L, PauseMenuCustomizeState.icon_discord_L_aspect,
-~ 						PauseMenuCustomizeState.icon_discord_R, PauseMenuCustomizeState.icon_discord_R_aspect));
+~ 		this.buttonList.add(lanButton = new GuiButtonWithStupidIcons(7, this.width / 2 + 2, this.height / 4 + 96 + b0,
+~ 				98, 20, "Browse Add-ons!", PauseMenuCustomizeState.icon_discord_L,
+~ 				PauseMenuCustomizeState.icon_discord_L_aspect, PauseMenuCustomizeState.icon_discord_R,
+~ 				PauseMenuCustomizeState.icon_discord_R_aspect));
 ~ 		this.buttonList.add(new GuiButtonWithStupidIcons(5, this.width / 2 - 100, this.height / 4 + 48 + b0, 98, 20,
-~ 				I18n.format("gui.achievements", new Object[0]), PauseMenuCustomizeState.icon_achievements_L,
+~ 				"Browse Add-ons!", PauseMenuCustomizeState.icon_achievements_L,
 ~ 				PauseMenuCustomizeState.icon_achievements_L_aspect, PauseMenuCustomizeState.icon_achievements_R,
 ~ 				PauseMenuCustomizeState.icon_achievements_R_aspect));
 ~ 		this.buttonList.add(new GuiButtonWithStupidIcons(6, this.width / 2 + 2, this.height / 4 + 48 + b0, 98, 20,
-~ 				I18n.format("gui.stats", new Object[0]), PauseMenuCustomizeState.icon_statistics_L,
+~ 				"Browse Add-ons!", PauseMenuCustomizeState.icon_statistics_L,
 ~ 				PauseMenuCustomizeState.icon_statistics_L_aspect, PauseMenuCustomizeState.icon_statistics_R,
 ~ 				PauseMenuCustomizeState.icon_statistics_R_aspect));
 ~ 		lanButton.enabled = SingleplayerServerController.isWorldRunning();
