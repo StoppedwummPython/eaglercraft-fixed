@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - stoppeds-fun-stuff # Added the new branch here
 jobs:
   # This job builds the client files and uploads them as an artifact
   build:
@@ -39,10 +40,9 @@ jobs:
 
   # This job downloads the artifacts and deploys them to the external repository
   deploy:
-    # This job runs only after the 'build' job has successfully completed
     needs: build
-    # This job should only run on a push to the main branch, not on pull requests
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Updated logic to run on either branch
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/stoppeds-fun-stuff')
     runs-on: ubuntu-latest
     steps:
       - name: Download Artifacts
@@ -50,71 +50,79 @@ jobs:
         with:
           name: eaglercraft-clients
           path: out/
+          
       - name: Install Butler
         run: |
-          # -L follows redirects
-          # -O specifies output name
           curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
           unzip butler.zip
-          # GNU unzip tends to not set the executable bit even though it's set in the .zip
           chmod +x butler
-          # just a sanity check run (and also helpful in case you're sharing CI logs)
           ./butler -V
-          echo $PAT # just a test
         env: 
-          # This makes the PAT available within the script.
           PAT: ${{ secrets.PAT }}
 
       - name: Deploy Manually using Git and LFS
         run: |
           # 1. Configure Git LFS
-          # This command initializes the Git LFS client in the runner environment.
           git lfs install
 
-          # 2. Clone the destination repository using a Personal Access Token (PAT)
-          # We clone it into a new directory named 'deploy_repo'.
+          # 2. Clone the destination repository
           echo "Cloning destination repository..."
           git clone "https://x-access-token:${{ secrets.PAT }}@github.com/StoppedwummPython/eageag.git" deploy_repo
 
           # 3. Navigate into the cloned repository
           cd deploy_repo
-
-          # 4. Clean the working directory
-          # This command removes all existing files and folders from the repository.
-          echo "Cleaning out old files..."
-          git rm -rf eaglercraft_js_client eaglercraft_wasm_client || true
-
-          # 5. Copy the new files from the build artifact
-          echo "Copying new website files..."
-          cp -r ../out/* .
-
-          # 6. Create .nojekyll file to disable Jekyll processing
-          # This tells GitHub Pages to treat the repository as a pure static site.
-          echo "Creating .nojekyll file..."
-          touch .nojekyll
-
-          # 7. Configure Git user for the commit
+          
+          # 4. Configure Git user
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 8. Add, commit, and push the changes
+          # 5. Logic to determine where to deploy based on the branch name
+          CURRENT_BRANCH="${{ github.ref_name }}"
+          
+          if [ "$CURRENT_BRANCH" == "main" ]; then
+            echo "--- DEPLOYING MAIN TO ROOT ---"
+            
+            # Clean root directory except .git folder
+            # Using find/rm is safer than git rm for bulk wiping while keeping .git
+            find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
+            
+            # Copy new files to root
+            cp -r ../out/* .
+            
+            # Create .nojekyll
+            touch .nojekyll
+            
+          elif [ "$CURRENT_BRANCH" == "stoppeds-fun-stuff" ]; then
+            echo "--- DEPLOYING TO SNAPSHIT DIRECTORY ---"
+            
+            # Create directory if it doesn't exist
+            mkdir -p snapshit
+            
+            # Clean only the snapshit directory
+            rm -rf snapshit/*
+            
+            # Copy new files into the subdirectory
+            cp -r ../out/* snapshit/
+            
+          else
+            echo "Unknown branch $CURRENT_BRANCH. Skipping deployment."
+            exit 1
+          fi
+
+          # 6. Add, commit, and push
           echo "Preparing to commit..."
           
-          # Add all new files to the staging area, including the new .nojekyll file.
+          # 'git add .' handles both new files and deletions automatically
           git add .
 
-          # Check if there are any changes to commit.
           if git diff --staged --quiet; then
             echo "No changes detected. Nothing to commit."
           else
             echo "Committing changes..."
-            git commit -m "Automated deployment of static files | Source: ${{ github.sha }}"
+            git commit -m "Deploy from branch $CURRENT_BRANCH | Source: ${{ github.sha }}"
 
             echo "Pushing to remote..."
-            # The push command will upload LFS files and commit the changes.
-            git push -u origin main
+            git push origin main
           fi
         env:
-          # This makes the PAT available within the script.
           PAT: ${{ secrets.PAT }}
-          
