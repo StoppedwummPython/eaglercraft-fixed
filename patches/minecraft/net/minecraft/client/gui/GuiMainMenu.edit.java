@@ -281,7 +281,7 @@
 ~ 		if (parGuiButton.id == 6) {
 ~ 			List<String> infoLines = new ArrayList<>();
 ~ 			infoLines.add("Changelog");
-~ 			infoLines.add("Added Servers from servers.eaglercraft.com");
+~ 			infoLines.add("Slowly phasing out");
 ~ 			infoLines.add("servers.eaglercraft.com");
 ~ 			infoLines.add("");
 ~ 			infoLines.add("Added 'Toggle to speak' to Voicechat");
