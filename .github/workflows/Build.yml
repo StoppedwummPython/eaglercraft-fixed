@@ -53,15 +53,6 @@ jobs:
           name: eaglercraft-clients
           path: out/
 
-      - name: Install Butler
-        run: |
-          curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
-          unzip butler.zip
-          chmod +x butler
-          ./butler -V
-        env: 
-          PAT: ${{ secrets.PAT }}
-
       - name: Deploy Manually using Git and LFS
         run: |
           # 1. Configure Git LFS
