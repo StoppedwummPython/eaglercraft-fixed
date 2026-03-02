@@ -13,7 +13,7 @@ public class EaglercraftVersion {
 	private static final Logger logger = LogManager.getLogger("EaglercraftVersion");
 	//////////////////////////////////////////////////////////////////////
 
-	private static final String generalVersion = "fixed-u3";
+	private static final String generalVersion = "fixed-u5";
 
 	public static final String projectForkName = "EaglercraftX-Fixed";
 	public static String projectForkVersion = generalVersion;
