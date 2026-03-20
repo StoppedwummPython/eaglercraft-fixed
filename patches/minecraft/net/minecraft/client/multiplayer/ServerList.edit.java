@@ -230,7 +230,7 @@
 
 > DELETE  3  @  3 : 4
 
-> INSERT  2 : 182  @  2
+> INSERT  2 : 186  @  2
 
 + 
 + 	public void freeServerIcons() {
@@ -342,11 +342,15 @@
 + 	}
 + 
 + 	/**
-+ 	 * Fetches TopEaglerServers using corsproxy.io
++ 	 * Fetches TopEaglerServers using eagproxy.vercel.app
 + 	 */
 + 	public void fetchTopEaglerServersAsync() {
-+ 		String target = "https://topeaglerservers.com/api/search/header?limit=4";
-+ 		String proxyUrl = "https://corsproxy.io/?" + target;
++ 		// Define the path part of the original URL
++ 		String apiPath = "search/header?limit=4";
++ 		// Construct the URL pointing to your Vercel proxy
++ 		// The proxy rewrites /api/search/... to
++ 		// https://topeaglerservers.com/api/search/...
++ 		String proxyUrl = "https://eagproxy.vercel.app/api/" + apiPath;
 + 
 + 		EagRuntime.downloadRemoteURIByteArray(proxyUrl, (data, error) -> {
 + 			if (error != null || data == null)
