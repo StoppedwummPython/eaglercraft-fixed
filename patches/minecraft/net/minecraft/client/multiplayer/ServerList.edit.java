@@ -342,7 +342,7 @@
 + 	}
 + 
 + 	/**
-+ 	 * Fetches TopEaglerServers using eagproxy.vercel.app
++ 	 * Fetches TopEaglerServers using eagproxy.stoppedwumm.net
 + 	 */
 + 	public void fetchTopEaglerServersAsync() {
 + 		// Define the path part of the original URL
@@ -350,7 +350,7 @@
 + 		// Construct the URL pointing to your Vercel proxy
 + 		// The proxy rewrites /api/search/... to
 + 		// https://topeaglerservers.com/api/search/...
-+ 		String proxyUrl = "https://eagproxy.vercel.app/api/" + apiPath;
++ 		String proxyUrl = "https://eagproxy.stoppedwumm.net/api/" + apiPath;
 + 
 + 		EagRuntime.downloadRemoteURIByteArray(proxyUrl, (data, error) -> {
 + 			if (error != null || data == null)
